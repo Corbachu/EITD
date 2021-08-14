@@ -1,0 +1,113 @@
+﻿  Building Custom Rule C:/projects/INTHEDARK/CMakeLists.txt
+  actor.cc
+  actor_list.cc
+  aitd_box.cc
+  anim.cc
+  anim_action.cc
+  cos_table.cc
+  debugger.cc
+  debug_font.cc
+  eval_var.cc
+  filestream.cc
+C:\projects\INTHEDARK\src\filestream.cc(47,23): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  file_access.cc
+  fitd.cc
+C:\projects\INTHEDARK\src\fitd.cc(328,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  floor.cc
+C:\projects\INTHEDARK\src\floor.cc(205,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\floor.cc(242,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\floor.cc(244,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\floor.cc(264,4): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\floor.cc(266,4): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\floor.cc(285,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\floor.cc(287,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  fmopl.cc
+  font.cc
+  gfx.cc
+C:\projects\INTHEDARK\src\gfx.cc(58,4): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\gfx.cc(33,2): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  hqr.cc
+C:\projects\INTHEDARK\src\hqr.cc(245,2): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\hqr.cc(246,2): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\hqr.cc(337,2): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  input.cc
+  inventory.cc
+C:\projects\INTHEDARK\src\inventory.cc(114,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  life.cc
+  Generating Code...
+C:\projects\INTHEDARK\src\fitd.cc(153): warning C4715: 'Fitd::FitdEngine::getCVarsIdx': not all control paths return a value
+C:\projects\INTHEDARK\src\eval_var.cc(820): warning C4715: 'Fitd::evalVar2': not all control paths return a value
+C:\projects\INTHEDARK\src\eval_var.cc(503): warning C4715: 'Fitd::evalVar': not all control paths return a value
+  Compiling...
+  life_2.cc
+  life_macro_table.cc
+  lines.cc
+  main.cc
+C:\projects\INTHEDARK\src\main.cc(2188,2): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\main.cc(2189,2): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\main.cc(2319,2): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  main_loop.cc
+C:\projects\INTHEDARK\src\main_loop.cc(285,29): warning C4018: '<': signed/unsigned mismatch
+  music.cc
+  object.cc
+  osystemSDL.cc
+  osystemSDL_GL.cc
+  pak.cc
+C:\projects\INTHEDARK\src\pak.cc(59,2): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\pak.cc(60,2): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\pak.cc(131,2): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\pak.cc(132,2): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\pak.cc(200,2): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\pak.cc(201,2): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  palette.cc
+  polys.cc
+  renderer.cc
+  resource.cc
+  room.cc
+C:\projects\INTHEDARK\src\room.cc(58,4): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\room.cc(60,4): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  save.cc
+C:\projects\INTHEDARK\src\save.cc(92,2): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\save.cc(94,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\save.cc(83,8): warning C4101: 'ptr': unreferenced local variable
+C:\projects\INTHEDARK\src\save.cc(570,29): warning C4390: ';': empty controlled statement found; is this the intent?
+C:\projects\INTHEDARK\src\save.cc(578,2): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\save.cc(580,12): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\save.cc(564,8): warning C4101: 'ptr': unreferenced local variable
+  screen.cc
+  sequence.cc
+C:\projects\INTHEDARK\src\sequence.cc(175,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\sequence.cc(244,30): warning C4018: '<': signed/unsigned mismatch
+C:\projects\INTHEDARK\src\sequence.cc(178,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  startup_menu.cc
+  system_menu.cc
+  Generating Code...
+  Compiling...
+  tatou.cc
+  textes.cc
+C:\projects\INTHEDARK\src\textes.cc(63,3): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\textes.cc(70,4): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\textes.cc(71,4): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\projects\INTHEDARK\src\textes.cc(74,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  thread_code.cc
+  timer.cc
+  track.cc
+C:\projects\INTHEDARK\src\track.cc(40,8): warning C4101: 'ebx': unreferenced local variable
+C:\projects\INTHEDARK\src\track.cc(37,8): warning C4101: 'eax': unreferenced local variable
+C:\projects\INTHEDARK\src\track.cc(39,8): warning C4101: 'esi': unreferenced local variable
+  unpack.cc
+C:\projects\INTHEDARK\src\unpack.cc(40,1): warning C4005: '_WINDOWS': macro redefinition
+C:\projects\INTHEDARK\src\unpack.cc : message : see previous definition of '_WINDOWS'
+  vars.cc
+  version.cc
+  video_mode.cc
+  zv.cc
+  textconsole.cc
+  epi_win32.cc
+  filesystem_win32.cc
+  Generating Code...
+C:\projects\INTHEDARK\src\common\textconsole.cc(12): warning C4700: uninitialized local variable 'va' used
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+SDLmain.lib(SDL_win32_main.obj) : error LNK2019: unresolved external symbol __imp__fprintf referenced in function _ShowError
+SDLmain.lib(SDL_win32_main.obj) : error LNK2019: unresolved external symbol __imp____iob_func referenced in function _ShowError
+C:\projects\INTHEDARK\BUILD\RelWithDebInfo\EITD.exe : fatal error LNK1120: 2 unresolved externals

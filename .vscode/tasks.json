@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build FITD",
+            "type": "shell",
+            "command": "C:\\MinGW\\bin\\mingw32-make.exe",
+            "args": [
+                "fitd"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
