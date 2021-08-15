@@ -1,13 +1,14 @@
 /obj
 /bin
+/BUILD
 EITD.layout
 EITD.depend
 .vscode/ipch/
 .vs
-/.vs
-/BUILD
+.vs/
+BUILD
 /build64
-win32/
+win32
 /warnings.osx.log
 /logmake
 desktop.ini
@@ -18,7 +19,7 @@ lib_linux
 obj_linux
 obj_bsd
 obj_build
-build
+BUILD
 build2
 build3
 build64
