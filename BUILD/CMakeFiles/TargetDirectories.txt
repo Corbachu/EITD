@@ -1,4 +1,0 @@
-C:/projects/INTHEDARK/BUILD/CMakeFiles/EITD.dir
-C:/projects/INTHEDARK/BUILD/CMakeFiles/INSTALL.dir
-C:/projects/INTHEDARK/BUILD/CMakeFiles/ALL_BUILD.dir
-C:/projects/INTHEDARK/BUILD/CMakeFiles/ZERO_CHECK.dir
