@@ -1,11 +1,11 @@
-obj/
-bin/
+/obj
+/bin
 EITD.layout
 EITD.depend
 .vscode/ipch/
 .vs
 /.vs
-/build
+/BUILD
 /build64
 win32/
 /warnings.osx.log
