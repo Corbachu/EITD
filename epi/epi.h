@@ -61,8 +61,6 @@
 #include "epi_vita.h"
 #endif
 
-
-
 // if we can't use C++11 or aren't using VS2015, resort to gross hacks
 #if __cplusplus < 201103L && (!defined(_MSC_VER) || _MSC_VER < 1900)
 #define nullptr NULL

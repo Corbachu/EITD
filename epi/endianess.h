@@ -22,6 +22,8 @@
 #ifndef __EPI_ENDIAN_H__
 #define __EPI_ENDIAN_H__
 
+#include "epi/types.h"
+
 // the two types of endianness
 #define EPI_LIL_ENDIAN  1234
 #define EPI_BIG_ENDIAN  4321

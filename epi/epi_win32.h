@@ -26,6 +26,12 @@
 #define __EPI_HEADER_SYSTEM_SPECIFIC__
 #endif
 
+#include <cstdio>
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+
+
 #if 0 // needed??
 #define R_OK    0x02
 #define W_OK    0x04
@@ -62,6 +68,38 @@
 #define _WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
+
+
+//
+// Fallbacks / default values for various special macros
+//
+#ifndef FORCEINLINE
+#define FORCEINLINE inline
+#endif
+
+#ifndef PLUGIN_EXPORT
+#define PLUGIN_EXPORT
+#endif
+
+#ifndef NORETURN_PRE
+#define	NORETURN_PRE
+#endif
+
+#ifndef NORETURN_POST
+#define	NORETURN_POST
+#endif
+
+#ifndef STRINGBUFLEN
+#define STRINGBUFLEN 1024
+#endif
+
+#ifndef LOCAL_PI
+#define LOCAL_PI 3.14159265358979323846
+#endif
+
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 256
+#endif
 
 #include <windows.h>
 
