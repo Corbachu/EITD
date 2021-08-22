@@ -20,7 +20,7 @@
  *
  */
 
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 #include "fitd.h"
 #include "common.h"
 
@@ -238,12 +238,12 @@ int copyObjectToActor(int flag2, int var1, int foundName, int16 flag,
 						int tempY;
 						int tempZ;
 
-						zvPtr->ZVX1 = (int16)READ_LE_UINT16(roomDataPtr + 0x00);
-						zvPtr->ZVX2 = (int16)READ_LE_UINT16(roomDataPtr + 0x02);
-						zvPtr->ZVY1 = (int16)READ_LE_UINT16(roomDataPtr + 0x04);
-						zvPtr->ZVY2 = (int16)READ_LE_UINT16(roomDataPtr + 0x06);
-						zvPtr->ZVZ1 = (int16)READ_LE_UINT16(roomDataPtr + 0x08);
-						zvPtr->ZVZ2 = (int16)READ_LE_UINT16(roomDataPtr + 0x0A);
+						zvPtr->ZVX1 = (int16)EPI_LE_U16(roomDataPtr + 0x00);
+						zvPtr->ZVX2 = (int16)EPI_LE_U16(roomDataPtr + 0x02);
+						zvPtr->ZVY1 = (int16)EPI_LE_U16(roomDataPtr + 0x04);
+						zvPtr->ZVY2 = (int16)EPI_LE_U16(roomDataPtr + 0x06);
+						zvPtr->ZVZ1 = (int16)EPI_LE_U16(roomDataPtr + 0x08);
+						zvPtr->ZVZ2 = (int16)EPI_LE_U16(roomDataPtr + 0x0A);
 
 						x = 0;
 						y = 0;
@@ -285,9 +285,9 @@ int copyObjectToActor(int flag2, int var1, int foundName, int16 flag,
 	}
 		default: 
 			{
-				warning("Unsupported ZV type in copyObjectToActor\n");
-				error("var1: %d\n", var1);
-				ASSERT(0);
+				I_Warning("Unsupported ZV type in copyObjectToActor\n");
+				I_Error("var1: %d\n", var1);
+				SYS_ASSERT(0);
 				break;
 			}
 	}

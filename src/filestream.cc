@@ -27,6 +27,7 @@
 
 // Dummy-class designed to be a workalike for OSystem-streams:
 
+#include <cstdio>
 #include "filestream.h"
 
 namespace Common 
@@ -76,14 +77,14 @@ uint32 ReadFileStream::readUint32LE()
 {
 	uint32 retval;
 	read((byte *)&retval, 4);
-	return READ_LE_UINT32(&retval);
+	return EPI_LE_U32(&retval);
 }
 
 uint16 ReadFileStream::readUint16LE() 
 {
 	uint16 retval;
 	read((byte *)&retval, 2);
-	return READ_LE_UINT16(&retval);
+	return EPI_LE_U32(&retval);
 		
 }
 	

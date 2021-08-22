@@ -56,19 +56,19 @@ void initFont(char *fontData, int color) {
 
 	fontVar1 = fontData; // fontPtr
 
-	tempDx = (int16)READ_LE_UINT16(fontData); // alignement
+	tempDx = (int16)EPI_LE_U16(fontData); // alignement
 	fontData += 2;
 
 	fontSm1 = *(fontData++); // character height
 	fontSm2 = *(fontData++); // character size
 
 	if(!fontSm2) {
-		fontSm2 = (int16)READ_LE_UINT16(fontData);
+		fontSm2 = (int16)EPI_LE_U16(fontData);
 	}
 
 	fontData += 2;
 
-	tempAxFlip = (int16)READ_LE_UINT16(fontData);
+	tempAxFlip = (int16)EPI_LE_U16(fontData);
 	fontData += 2;
 
 	tempAxFlip = ((tempAxFlip & 0xFF) << 8) | ((tempAxFlip & 0xFF00) >> 8);
@@ -96,7 +96,7 @@ int computeStringWidth(char *string) {
 		uint16 data;
 
 		dataPtr = fontVar5 + character * 2;
-		data = (int16)READ_LE_UINT16(dataPtr);
+		data = (int16)EPI_LE_U16(dataPtr);
 
 		data >>= 4;
 
@@ -129,7 +129,7 @@ void renderText(int x, int y, char *surface, char *string) {
 		uint16 dx;
 
 		dataPtr = fontVar5 + character * 2;
-		data = READ_LE_UINT16(dataPtr);
+		data = EPI_LE_U16(dataPtr);
 
 		data = ((data & 0xFF) << 8) | ((data & 0xFF00) >> 8);
 

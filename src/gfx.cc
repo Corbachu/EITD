@@ -487,7 +487,7 @@ void getHotPoint(int hotPointIdx, char *bodyPtr, point3dStruct *hotPoint) {
 		bodyPtr += 2;
 		bodyPtr += offset * 2; // skip bone buffer
 
-		ASSERT(hotPointIdx < offset);
+		SYS_ASSERT(hotPointIdx < offset);
 
 		if(hotPointIdx < offset) {
 			int pointIdx;
@@ -501,7 +501,7 @@ void getHotPoint(int hotPointIdx, char *bodyPtr, point3dStruct *hotPoint) {
 
 			pointIdx = *(int16 *)(bodyPtr + 4); // first point
 
-			//ASSERT(pointIdx > 0 && pointIdx < 1200);
+			//SYS_ASSERT(pointIdx > 0 && pointIdx < 1200);
 
 			source = (int16 *)(((char *)pointBuffer) + pointIdx);
 
@@ -980,12 +980,12 @@ void drawZone(char *zoneData, int color) {
 	cameraZv.ZVZ1 += translateZ;
 	cameraZv.ZVZ2 += translateZ;
 
-	tempZv.ZVX1 = (int16)READ_LE_UINT16(zoneData + 0x00);
-	tempZv.ZVX2 = (int16)READ_LE_UINT16(zoneData + 0x02);
-	tempZv.ZVY1 = (int16)READ_LE_UINT16(zoneData + 0x04);
-	tempZv.ZVY2 = (int16)READ_LE_UINT16(zoneData + 0x06);
-	tempZv.ZVZ1 = (int16)READ_LE_UINT16(zoneData + 0x08);
-	tempZv.ZVZ2 = (int16)READ_LE_UINT16(zoneData + 0x0A);
+	tempZv.ZVX1 = (int16)EPI_LE_U16(zoneData + 0x00);
+	tempZv.ZVX2 = (int16)EPI_LE_U16(zoneData + 0x02);
+	tempZv.ZVY1 = (int16)EPI_LE_U16(zoneData + 0x04);
+	tempZv.ZVY2 = (int16)EPI_LE_U16(zoneData + 0x06);
+	tempZv.ZVZ1 = (int16)EPI_LE_U16(zoneData + 0x08);
+	tempZv.ZVZ2 = (int16)EPI_LE_U16(zoneData + 0x0A);
 
 	if(checkZvCollision(&cameraZv, &tempZv)) {
 		return;

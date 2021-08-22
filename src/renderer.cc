@@ -1,26 +1,31 @@
-/* ResidualVM - A 3D game interpreter
- *
- * ResidualVM is the legal property of its developers, whose names
- * are too numerous to list here. Please refer to the AUTHORS
- * file distributed with this source distribution.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- */
+//----------------------------------------------------------------------------
+//  EDGE IN THE DARK
+//----------------------------------------------------------------------------
+// 
+//  Copyright (c) 1999-2021  The EDGE Team.
+// 
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//----------------------------------------------------------------------------
+//
+//  Based on the DOOM source code, released by Id Software under the
+//  following copyright:
+//
+//    Copyright (C) 1993-1996 by id Software, Inc.
+//
+//  Based on the FITD source code, under the GPLv2, (C) FITD AUTHORS
+//
+//----------------------------------------------------------------------------
 
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 #include "osystem.h"
 #include "common.h"
 
@@ -412,7 +417,7 @@ int computeModel(int x, int y, int z, int alpha, int beta, int gamma, void *mode
 	numOfPoints = *(int16 *)ptr;
 	ptr += 2;
 
-	ASSERT(numOfPoints < NUM_MAX_POINT_IN_POINT_BUFFER);
+	SYS_ASSERT(numOfPoints < NUM_MAX_POINT_IN_POINT_BUFFER);
 
 	memcpy(pointBuffer, ptr, numOfPoints * 3 * 2);
 	ptr += numOfPoints * 3 * 2;
@@ -420,7 +425,7 @@ int computeModel(int x, int y, int z, int alpha, int beta, int gamma, void *mode
 	numOfBones = *(int16 *)ptr;
 	ptr += 2;
 
-	ASSERT(numOfBones < NUM_MAX_BONES);
+	SYS_ASSERT(numOfBones < NUM_MAX_BONES);
 	memcpy(bonesBuffer, ptr, numOfBones * 2);
 	ptr += numOfBones * 2;
 
@@ -528,14 +533,14 @@ int computeModel(int x, int y, int z, int alpha, int beta, int gamma, void *mode
 		point1 = *(int16 *)(si + 4);
 		point2 = *(int16 *)(si);
 
-		ASSERT(point1 % 2 == 0);
-		ASSERT(point2 % 2 == 0);
+		SYS_ASSERT(point1 % 2 == 0);
+		SYS_ASSERT(point2 % 2 == 0);
 
 		point1 /= 2;
 		point2 /= 2;
 
-		ASSERT(point1 / 3 < NUM_MAX_POINT_IN_POINT_BUFFER);
-		ASSERT(point2 / 3 < NUM_MAX_POINT_IN_POINT_BUFFER);
+		SYS_ASSERT(point1 / 3 < NUM_MAX_POINT_IN_POINT_BUFFER);
+		SYS_ASSERT(point2 / 3 < NUM_MAX_POINT_IN_POINT_BUFFER);
 
 		ptr1 = (int16 *)&pointBuffer[point1];
 		ptr2 = (int16 *)&pointBuffer[point2];
@@ -825,7 +830,7 @@ char *primVar1;
 char *primVar2;
 
 void primFunctionDefault(int primType, char **ptr, char **out) {
-	error("UnHandled primType %d\n", primType);
+	I_Error("UnHandled primType %d\n", primType);
 }
 
 void primType0(int primType, char **ptr, char **out) { // line tested
@@ -849,7 +854,7 @@ void primType0(int primType, char **ptr, char **out) { // line tested
 		pointIndex = *(uint16 *)(*ptr);
 		(*ptr) += 2;
 
-		ASSERT((pointIndex % 2) == 0);
+		SYS_ASSERT((pointIndex % 2) == 0);
 
 		pCurrentPrimEntry->lineEntry.points[i].X = renderPointList[pointIndex/2];
 		pCurrentPrimEntry->lineEntry.points[i].Y = renderPointList[(pointIndex/2)+1];
@@ -876,8 +881,8 @@ void primType1(int primType, char **ptr, char **out) { // poly
 	rendererPointStruct *pCurrentPoint = &primPointTable[positionInPointTable];
 	primEntryStruct *pCurrentPrimEntry = &primTable[positionInPrimEntry];
 
-	ASSERT(positionInPointTable < NUM_MAX_POINT);
-	ASSERT(positionInPrimEntry < NUM_MAX_PRIM_ENTRY);
+	SYS_ASSERT(positionInPointTable < NUM_MAX_POINT);
+	SYS_ASSERT(positionInPrimEntry < NUM_MAX_PRIM_ENTRY);
 
 	numOfPointInPoly = **ptr;
 	(*ptr)++;
@@ -900,7 +905,7 @@ void primType1(int primType, char **ptr, char **out) { // poly
 		pointIndex = *(uint16 *)(*ptr);
 		(*ptr) += 2;
 
-		ASSERT((pointIndex % 2) == 0);
+		SYS_ASSERT((pointIndex % 2) == 0);
 
 		pCurrentPoint->X = renderPointList[pointIndex/2];
 		pCurrentPoint->Y = renderPointList[(pointIndex/2)+1];
@@ -937,7 +942,7 @@ void primType2(int primType, char **ptr, char **out) { // point
 	pointIndex = *(uint16 *)(*ptr);
 	(*ptr) += 2;
 
-	ASSERT((pointIndex % 2) == 0);
+	SYS_ASSERT((pointIndex % 2) == 0);
 
 	pCurrentPrimEntry->pointEntry.X = renderPointList[pointIndex/2];
 	pCurrentPrimEntry->pointEntry.Y = renderPointList[(pointIndex/2)+1];
@@ -970,7 +975,7 @@ void primType3(int primType, char **ptr, char **out) { // sphere
 	pointIndex = *(uint16 *)(*ptr);
 	(*ptr) += 2;
 
-	ASSERT((pointIndex % 2) == 0);
+	SYS_ASSERT((pointIndex % 2) == 0);
 
 	pCurrentPrimEntry->discEntry.X = renderPointList[pointIndex/2];
 	pCurrentPrimEntry->discEntry.Y = renderPointList[(pointIndex/2)+1];
@@ -1057,7 +1062,7 @@ void renderStyle3(primEntryStruct *pEntry) {
 
 
 void defaultRenderFunction(primEntryStruct *buffer) {
-	warning("Unsupported renderType\n");
+	I_Warning("Unsupported renderType\n");
 }
 
 typedef void (*renderFunction)(primEntryStruct *buffer);
@@ -1144,11 +1149,11 @@ int renderModel(int x, int y, int z, int alpha, int beta, int gamma, void *model
 
 	renderVar2 = renderBuffer;
 
-	modelFlags = (int16)READ_LE_UINT16(ptr);
+	modelFlags = (int16)EPI_LE_U16(ptr);
 	ptr += 2;
 	ptr += 12;
 
-	ptr += (int16)READ_LE_UINT16(ptr) + 2;
+	ptr += (int16)EPI_LE_U16(ptr) + 2;
 
 	if(modelFlags & 2) {
 		if(!computeModel(x, y, z, alpha, beta, gamma, modelPtr, ptr)) {
@@ -1167,7 +1172,7 @@ int renderModel(int x, int y, int z, int alpha, int beta, int gamma, void *model
 			return(2);
 		}
 	} else {
-		warning("unsupported model type prerenderFlag4 in renderer !\n");
+		I_Warning("unsupported model type prerenderFlag4 in renderer !\n");
 
 		BBox3D3 = -32000;
 		BBox3D4 = -32000;
@@ -1177,7 +1182,7 @@ int renderModel(int x, int y, int z, int alpha, int beta, int gamma, void *model
 	}
 
 	ptr = tempOutPtr;
-	numPrim = (int16)READ_LE_UINT16(ptr);
+	numPrim = (int16)EPI_LE_U16(ptr);
 	ptr += 2;
 
 	if(!numPrim) {
@@ -1283,11 +1288,11 @@ void computeScreenBox(int x, int y, int z, int alpha, int beta, int gamma, char 
 
 	renderVar2 = renderBuffer;
 
-	modelFlags = (int16)READ_LE_UINT16(ptr);
+	modelFlags = (int16)EPI_LE_U16(ptr);
 	ptr += 2;
 	ptr += 12;
 
-	ptr += (int16)READ_LE_UINT16(ptr) + 2;
+	ptr += (int16)EPI_LE_U16(ptr) + 2;
 
 	if(modelFlags & 2) {
 		computeModel(x, y, z, alpha, beta, gamma, bodyPtr, ptr);

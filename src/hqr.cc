@@ -28,7 +28,9 @@
 //#include "common.h"
 #undef HAVE_CONFIG_H
 #define UNIX
-#include "common/endian.h"
+#include "epi/epi.h"
+#include "epi/types.h"
+#include "epi/endianess.h"
 #include "hqr.h"
 #include "pak.h"
 #include "debugger.h"
@@ -217,7 +219,7 @@ char *hqrEntryStruct::get(int index) {
 			}
 		}
 
-		ASSERT(foundEntry);
+		SYS_ASSERT(foundEntry);
 
 		//    foundEntry = hqrSubPtr;
 
@@ -264,8 +266,8 @@ hqrEntryStruct::hqrEntryStruct(const char *name, int size, int numEntries) {
 	
 hqrEntryStruct::hqrEntryStruct(int32 size, int32 numEntry) {
 	_hqrVar1 = 0;
-	ASSERT(size > 0);
-	ASSERT(numEntry > 0);
+	SYS_ASSERT(size > 0);
+	SYS_ASSERT(numEntry > 0);
 	
 	numEntry = 2000;
 	
@@ -286,21 +288,21 @@ hqrEntryStruct *HQR_Init(int size, int numEntry) {
 	hqrEntryStruct *dest;
 	char *dest2;
 
-	ASSERT(size > 0);
-	ASSERT(numEntry > 0);
+	SYS_ASSERT(size > 0);
+	SYS_ASSERT(numEntry > 0);
 
 	dest = (hqrEntryStruct *)malloc(sizeof(hqrEntryStruct));
 
 	numEntry = 2000;
 
-	ASSERT_PTR(dest);
+	SYS_ASSERT_PTR(dest);
 
 	if(!dest)
 		return NULL;
 
 	dest2 = (char *)malloc(size);
 
-	ASSERT_PTR(dest2);
+	SYS_ASSERT_PTR(dest2);
 
 	if(!dest2)
 		return NULL;
@@ -338,7 +340,7 @@ hqrEntryStruct::~hqrEntryStruct() {
 }
 
 void hqrEntryStruct::setString(const char* str) {
-	assert(strlen(str) <= 10);
+	SYS_ASSERT(strlen(str) <= 10);
 	strcpy(_string, str);
 }
 

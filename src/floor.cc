@@ -11,19 +11,19 @@ unsigned long int numGlobalCamera = 0;
 cameraDataStruct *globalCameraDataTable = NULL;
 
 void cameraDataStruct::load(const char *data) {
-	_alpha = READ_LE_UINT16(data + 0x00);
-	_beta  = READ_LE_UINT16(data + 0x02);
-	_gamma = READ_LE_UINT16(data + 0x04);
+	_alpha = EPI_LE_U16(data + 0x00);
+	_beta  = EPI_LE_U16(data + 0x02);
+	_gamma = EPI_LE_U16(data + 0x04);
 	
-	_x = READ_LE_UINT16(data + 0x06);
-	_y = READ_LE_UINT16(data + 0x08);
-	_z = READ_LE_UINT16(data + 0x0A);
+	_x = EPI_LE_U16(data + 0x06);
+	_y = EPI_LE_U16(data + 0x08);
+	_z = EPI_LE_U16(data + 0x0A);
 	
-	_focal1 = READ_LE_UINT16(data + 0x0C);
-	_focal2 = READ_LE_UINT16(data + 0x0E);
-	_focal3 = READ_LE_UINT16(data + 0x10);
+	_focal1 = EPI_LE_U16(data + 0x0C);
+	_focal2 = EPI_LE_U16(data + 0x0E);
+	_focal3 = EPI_LE_U16(data + 0x10);
 	
-	_numCameraZoneDef = READ_LE_UINT16(data + 0x12);
+	_numCameraZoneDef = EPI_LE_U16(data + 0x12);
 	
 	_cameraZoneDefTable = new cameraZoneDefStruct[_numCameraZoneDef];
 
@@ -45,16 +45,16 @@ void cameraDataStruct::load(const char *data) {
 }
 	
 void cameraZoneDefStruct::load(const char *data, const char *basedata) {
-	dummy1 = READ_LE_UINT16(data + 0x00);
-	dummy2 = READ_LE_UINT16(data + 0x02);
-	dummy3 = READ_LE_UINT16(data + 0x04);
-	dummy4 = READ_LE_UINT16(data + 0x06);
-	dummy5 = READ_LE_UINT16(data + 0x08);
-	dummy6 = READ_LE_UINT16(data + 0x0A);
+	dummy1 = EPI_LE_U16(data + 0x00);
+	dummy2 = EPI_LE_U16(data + 0x02);
+	dummy3 = EPI_LE_U16(data + 0x04);
+	dummy4 = EPI_LE_U16(data + 0x06);
+	dummy5 = EPI_LE_U16(data + 0x08);
+	dummy6 = EPI_LE_U16(data + 0x0A);
 	
 	if(g_fitd->getGameType() != GType_AITD1) {
-		dummy7 = READ_LE_UINT16(data + 0x0C);
-		dummy8 = READ_LE_UINT16(data + 0x0E);
+		dummy7 = EPI_LE_U16(data + 0x0C);
+		dummy8 = EPI_LE_U16(data + 0x0E);
 	}
 	
 	// load camera zone
@@ -64,12 +64,12 @@ void cameraZoneDefStruct::load(const char *data, const char *basedata) {
 		pZoneData = basedata + dummy3;
 		//pZoneData = currentCameraData;
 		
-		numZones = numZones = READ_LE_UINT16(pZoneData);
+		numZones = numZones = EPI_LE_U16(pZoneData);
 		pZoneData += 2;
 		
 		cameraZoneEntryTable = (cameraZoneEntryStruct *)malloc(sizeof(cameraZoneEntryStruct) * numZones);
 		
-		ASSERT(cameraZoneEntryTable);
+		SYS_ASSERT(cameraZoneEntryTable);
 		
 		for(int j = 0; j < numZones; j++) {
 			cameraZoneEntryTable[j].load(pZoneData);
@@ -81,15 +81,15 @@ void cameraZoneDefStruct::load(const char *data, const char *basedata) {
 void cameraZoneEntryStruct::load(const char *data) {
 	int32 numOfPoints;
 	
-	numPoints = numOfPoints = READ_LE_UINT16(data);
+	numPoints = numOfPoints = EPI_LE_U16(data);
 	data += 2;
 	
 	pointTable = new cameraZonePointStruct[numOfPoints + 1];
 	
 	for(int32 pointIdx = 0; pointIdx < numPoints; pointIdx++) {
-		pointTable[pointIdx].x = READ_LE_UINT16(data);
+		pointTable[pointIdx].x = EPI_LE_U16(data);
 		data += 2;
-		pointTable[pointIdx].y = READ_LE_UINT16(data);
+		pointTable[pointIdx].y = EPI_LE_U16(data);
 		data += 2;
 	}
 	
@@ -98,31 +98,31 @@ void cameraZoneEntryStruct::load(const char *data) {
 }
 
 void ZVStruct::load(const char *data) {
-	ZVX1 = (int16)READ_LE_UINT16(data + 0x00);
-	ZVX2 = (int16)READ_LE_UINT16(data + 0x02);
-	ZVY1 = (int16)READ_LE_UINT16(data + 0x04);
-	ZVY2 = (int16)READ_LE_UINT16(data + 0x06);
-	ZVZ1 = (int16)READ_LE_UINT16(data + 0x08);
-	ZVZ2 = (int16)READ_LE_UINT16(data + 0x0A);
+	ZVX1 = (int16)EPI_LE_U16(data + 0x00);
+	ZVX2 = (int16)EPI_LE_U16(data + 0x02);
+	ZVY1 = (int16)EPI_LE_U16(data + 0x04);
+	ZVY2 = (int16)EPI_LE_U16(data + 0x06);
+	ZVZ1 = (int16)EPI_LE_U16(data + 0x08);
+	ZVZ2 = (int16)EPI_LE_U16(data + 0x0A);
 }
 
 void roomDataStruct::load(const char *data) {
-	worldX = (int16)READ_LE_UINT16(data + 4);
-	worldY = (int16)READ_LE_UINT16(data + 6);
-	worldZ = (int16)READ_LE_UINT16(data + 8);
+	worldX = (int16)EPI_LE_U16(data + 4);
+	worldY = (int16)EPI_LE_U16(data + 6);
+	worldZ = (int16)EPI_LE_U16(data + 8);
 	
-	numCameraInRoom = READ_LE_UINT16(data + 0xA);
+	numCameraInRoom = EPI_LE_U16(data + 0xA);
 	
 	cameraIdxTable = new uint16[numCameraInRoom];
 	
 	for(uint32 j = 0; j < numCameraInRoom; j++) {
-		cameraIdxTable[j] = READ_LE_UINT16(data + 0xC + 2 * j);
+		cameraIdxTable[j] = EPI_LE_U16(data + 0xC + 2 * j);
 	}
 	
 	// hard col read
 	
-	const char *hardColData = data + READ_LE_UINT16(data);
-	numHardCol = READ_LE_UINT16(hardColData);
+	const char *hardColData = data + EPI_LE_U16(data);
+	numHardCol = EPI_LE_U16(hardColData);
 	hardColData += 2;
 	
 	if(numHardCol) {
@@ -131,8 +131,8 @@ void roomDataStruct::load(const char *data) {
 		for(uint32 j = 0; j < numHardCol; j++) {
 			hardColTable[j].zv.load(hardColData);
 
-			hardColTable[j].parameter = READ_LE_UINT16(hardColData + 0x0C);
-			hardColTable[j].type = READ_LE_UINT16(hardColData + 0x0E);
+			hardColTable[j].parameter = EPI_LE_U16(hardColData + 0x0C);
+			hardColTable[j].type = EPI_LE_U16(hardColData + 0x0E);
 
 			hardColData += 0x10;
 		}
@@ -142,8 +142,8 @@ void roomDataStruct::load(const char *data) {
 	
 	// sce zone read
 	
-	const char *sceZoneData = data + READ_LE_UINT16(data + 2);
-	numSceZone = READ_LE_UINT16(sceZoneData);
+	const char *sceZoneData = data + EPI_LE_U16(data + 2);
+	numSceZone = EPI_LE_U16(sceZoneData);
 	sceZoneData += 2;
 	
 	if(numSceZone) {
@@ -152,8 +152,8 @@ void roomDataStruct::load(const char *data) {
 		for(uint32 j = 0; j < numSceZone; j++) {
 			sceZoneTable[j].zv.load(sceZoneData);
 			
-			sceZoneTable[j].parameter = READ_LE_UINT16(sceZoneData + 0x0C);
-			sceZoneTable[j].type = READ_LE_UINT16(sceZoneData + 0x0E);
+			sceZoneTable[j].parameter = EPI_LE_U16(sceZoneData + 0x0C);
+			sceZoneTable[j].type = EPI_LE_U16(sceZoneData + 0x0E);
 			
 			sceZoneData += 0x10;
 		}
@@ -169,7 +169,8 @@ void loadFloor(int32 floorNumber) {
 	uint32 cameraDataSize;
 	char buffer[256];
 
-	if(etageVar1) {
+	if(etageVar1) 
+	{
 		free(etageVar1);
 		free(etageVar0);
 	}
@@ -226,7 +227,7 @@ void loadFloor(int32 floorNumber) {
 
 			roomData = g_resourceLoader->loadPakSafe(buffer, i);
 		} else {
-			roomData = (etageVar0 + READ_LE_UINT32(etageVar0 + i * 4));
+			roomData = (etageVar0 + EPI_LE_U32(etageVar0 + i * 4));
 		}
 		currentRoomDataPtr = &roomDataTable[i];
 		
@@ -248,7 +249,7 @@ void loadFloor(int32 floorNumber) {
 
 		expectedNumberOfCamera = PAK_getNumFiles(buffer);
 	} else {
-		expectedNumberOfCamera = ((READ_LE_UINT32(etageVar1)) / 4);
+		expectedNumberOfCamera = ((EPI_LE_U32(etageVar1)) / 4);
 	}
 
 	//globalCameraDataTable = (cameraDataStruct *)malloc(sizeof(cameraDataStruct) * expectedNumberOfCamera);
@@ -271,20 +272,23 @@ void loadFloor(int32 floorNumber) {
 			cameraDataSize = 1;
 			currentCameraData = g_resourceLoader->loadPakSafe(buffer, i);
 		} else {
-			offset = READ_LE_UINT32(etageVar1 + i * 4);
+			offset = EPI_LE_U32(etageVar1 + i * 4);
 		}
 
 		// load cameras
-		if(offset < cameraDataSize) {
-			if(g_fitd->getGameType() < GType_AITD3) {
-				currentCameraData = (etageVar1 + READ_LE_UINT32(etageVar1 + i * 4));
+		if(offset < cameraDataSize) 
+		{
+			if(g_fitd->getGameType() < GType_AITD3) 
+			{
+				currentCameraData = (etageVar1 + EPI_LE_U32(etageVar1 + i * 4));
 			}
 
 			globalCameraDataTable[i].load(currentCameraData);
 
-			ASSERT(globalCameraDataTable[i]._cameraZoneDefTable);
+			SYS_ASSERT(globalCameraDataTable[i]._cameraZoneDefTable);
 
-		} else {
+		} else 
+		{
 			break;
 		}
 		

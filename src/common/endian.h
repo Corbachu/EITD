@@ -23,7 +23,7 @@
 #ifndef COMMON_ENDIAN_H
 #define COMMON_ENDIAN_H
 
-#include "common/scummsys.h"
+//#include "common/scummsys.h"
 
 /**
  *  \file endian.h
@@ -45,9 +45,6 @@
  */
 
 // Sanity check
-#if !defined(SCUMM_LITTLE_ENDIAN) && !defined(SCUMM_BIG_ENDIAN)
-#	error No endianness defined
-#endif
 
 #define SWAP_CONSTANT_32(a) \
 	((uint32)((((a) >> 24) & 0x00FF) | \
