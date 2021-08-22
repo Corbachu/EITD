@@ -23,9 +23,11 @@
 #include "osystem.h"
 #include "common.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
-void printString(int index, int textIndex, int selectedIndex) {
+void printString(int index, int textIndex, int selectedIndex) 
+{
 	int topPosition;
 
 	topPosition = (((currentMenuBottom - currentMenuTop) / 2) + currentMenuTop) + (index << 4) - 8;
@@ -37,7 +39,8 @@ void printString(int index, int textIndex, int selectedIndex) {
 	}
 }
 
-void drawSystemMenuLayout(int selectedStringNumber) {
+void drawSystemMenuLayout(int selectedStringNumber) 
+{
 
 	drawAITDBox(160, 100, 320, 200);
 
@@ -59,7 +62,8 @@ void drawSystemMenuLayout(int selectedStringNumber) {
 	menuWaitVSync();
 }
 
-void processSystemMenu(void) {
+void processSystemMenu(void) 
+{
 	int entry = -1;
 	int exitMenu = 0;
 	int currentSelectedEntry;
@@ -67,7 +71,8 @@ void processSystemMenu(void) {
 	freezeTime();
 	//pauseShaking();
 
-	if(lightVar1) {
+	if(lightVar1) 
+	{
 		//makeBlackPalette();
 	}
 
@@ -75,7 +80,8 @@ void processSystemMenu(void) {
 
 	currentSelectedEntry = 0;
 
-	while(!exitMenu) {
+	while(!exitMenu) 
+	{
 		readKeyboard();
 		flushScreen();
 
@@ -83,7 +89,8 @@ void processSystemMenu(void) {
 		g_driver->CopyBlockPhys((unsigned char *)screen, 0, 0, 320, 200);
 		g_driver->startFrame();
 
-		if(lightVar1) {
+		if(lightVar1) 
+		{
 			make3dTatouUnk1(0x40, 0);
 		}
 
@@ -93,9 +100,12 @@ void processSystemMenu(void) {
 			button = input1;
 			input4 = inputKey;
 
-			if(!input5) {
-				if(input3 == 0x1C || button) { // enter
-					switch(currentSelectedEntry) {
+			if(!input5) 
+			{
+				if(input3 == 0x1C || button) 
+				{ // enter
+					switch(currentSelectedEntry) 
+					{
 					case 0: // exit menu
 						exitMenu = 1;
 						break;
@@ -103,7 +113,8 @@ void processSystemMenu(void) {
 						makeSave(45);
 						break;
 					case 2: // load
-						if(restoreSave(46, 1)) {
+						if(restoreSave(46, 1)) 
+						{
 							mainVar1 = 2;
 							unfreezeTime();
 							//updateShaking();
@@ -112,11 +123,15 @@ void processSystemMenu(void) {
 						break;
 
 					}
-				} else {
-					if(input3 == 0x1B) {
+				} 
+				else 
+				{
+					if(input3 == 0x1B) 
+					{
 						exitMenu = 1;
 					}
-					if(input4 == 1) { // up
+					if(input4 == 1) 
+					{ // up
 						currentSelectedEntry--;
 
 						if(currentSelectedEntry < 0)
@@ -124,7 +139,8 @@ void processSystemMenu(void) {
 
 						input5 = 1;
 					}
-					if(input4 == 2) { // bottom
+					if(input4 == 2) 
+					{ // bottom
 						currentSelectedEntry++;
 
 						if(currentSelectedEntry > 6)
@@ -133,8 +149,11 @@ void processSystemMenu(void) {
 						input5 = 1;
 					}
 				}
-			} else {
-				if(!input3 && !input4) {
+			} 
+			else 
+			{
+				if(!input3 && !input4) 
+				{
 					input5 = 0;
 				}
 			}

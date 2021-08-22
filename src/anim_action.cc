@@ -28,7 +28,7 @@
 #include "actor.h"
 
 #include "common.h"
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 
 namespace Fitd {
 
@@ -520,7 +520,7 @@ void processAnimAction(void) {
 	}
 #ifdef INTERNAL_DEBUGGER
 	default: {
-		warning("Unsupported processAnimAction type %d\n", currentProcessedActorPtr->animActionType);
+		I_Warning("Unsupported processAnimAction type %d\n", currentProcessedActorPtr->animActionType);
 		break;
 	}
 #endif

@@ -20,7 +20,8 @@
  *
  */
 
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
+#include "epi/asserts.h"
 #include "fitd.h"
 #include "osystem.h"
 #include "common.h"
@@ -200,8 +201,9 @@ int createFlow(int mode, int X, int Y, int Z, int stage, int room, int alpha, in
 
 		break;
 	}
-	default: {
-		warning("Unsupported case %d in createFlow\n", mode);
+	default: 
+	{
+		I_Warning("Unsupported case %d in createFlow\n", mode);
 	}
 	}
 
@@ -209,7 +211,8 @@ int createFlow(int mode, int X, int Y, int Z, int stage, int room, int alpha, in
 	return(i);
 }
 
-void getHardClip() {
+void getHardClip() 
+{
 	ZVStruct *zvPtr = &currentProcessedActorPtr->zv;
 	char *etageData = (char *)getRoomData(currentProcessedActorPtr->room);
 	int16 numEntry;
@@ -223,14 +226,15 @@ void getHardClip() {
 	for(i = 0; i < numEntry; i++) {
 		ZVStruct zvCol;
 
-		zvCol.ZVX1 = (int16)READ_LE_UINT16(etageData + 0x00);
-		zvCol.ZVX2 = (int16)READ_LE_UINT16(etageData + 0x02);
-		zvCol.ZVY1 = (int16)READ_LE_UINT16(etageData + 0x04);
-		zvCol.ZVY2 = (int16)READ_LE_UINT16(etageData + 0x06);
-		zvCol.ZVZ1 = (int16)READ_LE_UINT16(etageData + 0x08);
-		zvCol.ZVZ2 = (int16)READ_LE_UINT16(etageData + 0x0A);
+		zvCol.ZVX1 = (int16)EPI_LE_U16(etageData + 0x00);
+		zvCol.ZVX2 = (int16)EPI_LE_U16(etageData + 0x02);
+		zvCol.ZVY1 = (int16)EPI_LE_U16(etageData + 0x04);
+		zvCol.ZVY2 = (int16)EPI_LE_U16(etageData + 0x06);
+		zvCol.ZVZ1 = (int16)EPI_LE_U16(etageData + 0x08);
+		zvCol.ZVZ2 = (int16)EPI_LE_U16(etageData + 0x0A);
 
-		if(checkZvCollision(zvPtr, &zvCol)) {
+		if(checkZvCollision(zvPtr, &zvCol)) 
+		{
 			hardClip.ZVX1 = zvCol.ZVX1;
 			hardClip.ZVX2 = zvCol.ZVX2;
 			hardClip.ZVY1 = zvCol.ZVY1;
@@ -252,41 +256,54 @@ void getHardClip() {
 	hardClip.ZVZ2 = -32000;
 }
 
-void animMove(int a, int b, int c, int d, int e, int f, int g) {
-	if(currentProcessedActorPtr->speed == 4) {
+void animMove(int a, int b, int c, int d, int e, int f, int g) 
+{
+	if(currentProcessedActorPtr->speed == 4) 
+	{
 		anim(b, 1, -1);
 	}
-	if(currentProcessedActorPtr->speed == 5) {
+	if(currentProcessedActorPtr->speed == 5) 
+	{
 		anim(c, 1, -1);
 	}
-	if(currentProcessedActorPtr->speed == -1) {
-		if(currentProcessedActorPtr->ANIM == b) {
+	if(currentProcessedActorPtr->speed == -1) 
+	{
+		if(currentProcessedActorPtr->ANIM == b) 
+		{
 			anim(a, 0, e);
-		} else if(currentProcessedActorPtr->ANIM == c) {
+		} else if(currentProcessedActorPtr->ANIM == c) 
+		{
 			anim(d, 0, a);
-		} else {
+		} else 
+		{
 			anim(e, 1, -1); // walk backward
 		}
 	}
-	if(currentProcessedActorPtr->speed == 0) {
-		if(currentProcessedActorPtr->ANIM == c) {
+	if(currentProcessedActorPtr->speed == 0) 
+	{
+		if(currentProcessedActorPtr->ANIM == c) 
+		{
 			anim(d, 0, a);
 		}
 		else {
-			if(currentProcessedActorPtr->rotateTarget == 0)	{
+			if(currentProcessedActorPtr->rotateTarget == 0)	
+			{
 				anim(a, 1, -1);
 			}
-			if(currentProcessedActorPtr->rotateTarget == 1)	{
+			if(currentProcessedActorPtr->rotateTarget == 1)	
+			{
 				anim(g, 0, a);
 			}
-			if(currentProcessedActorPtr->rotateTarget == -1) {
+			if(currentProcessedActorPtr->rotateTarget == -1) 
+			{
 				anim(f, 0, a);
 			}
 		}
 	}
 }
 
-void setStage(int newStage, int newRoomLocal, int X, int Y, int Z) {
+void setStage(int newStage, int newRoomLocal, int X, int Y, int Z) 
+{
 	int animX;
 	int animY;
 	int animZ;
@@ -294,7 +311,8 @@ void setStage(int newStage, int newRoomLocal, int X, int Y, int Z) {
 	currentProcessedActorPtr->stage = newStage;
 	currentProcessedActorPtr->room = newRoomLocal;
 
-	if(g_fitd->getGameType() != GType_AITD1) {
+	if(g_fitd->getGameType() != GType_AITD1) 
+	{
 		currentProcessedActorPtr->hardMat = -1;
 	}
 
@@ -323,19 +341,25 @@ void setStage(int newStage, int newRoomLocal, int X, int Y, int Z) {
 	currentProcessedActorPtr->modY = 0;
 	currentProcessedActorPtr->modZ = 0;
 
-	if(currentActorCameraTarget == currentProcessedActorIdx) {
-		if(newStage != currentEtage) {
+	if(currentActorCameraTarget == currentProcessedActorIdx) 
+	{
+		if(newStage != currentEtage) 
+		{
 			changeFloor = 1;
 			newFloor = newStage;
 			newRoom = newRoomLocal;
-		} else {
-			if(currentDisplayedRoom != newRoomLocal) {
+		} else 
+		{
+			if(currentDisplayedRoom != newRoomLocal) 
+			{
 				needChangeRoom = 1;
 				newRoom = newRoomLocal;
 			}
 		}
-	} else {
-		if(currentDisplayedRoom != newRoomLocal) {
+	} else 
+	{
+		if(currentDisplayedRoom != newRoomLocal) 
+		{
 			currentProcessedActorPtr->worldX -= (int16)((roomDataTable[currentDisplayedRoom].worldX - roomDataTable[newRoomLocal].worldX) * 10);
 			currentProcessedActorPtr->worldY += (int16)((roomDataTable[currentDisplayedRoom].worldY - roomDataTable[newRoomLocal].worldY) * 10);
 			currentProcessedActorPtr->worldZ += (int16)((roomDataTable[currentDisplayedRoom].worldZ - roomDataTable[newRoomLocal].worldZ) * 10);
@@ -345,7 +369,8 @@ void setStage(int newStage, int newRoomLocal, int X, int Y, int Z) {
 	}
 }
 
-void setupRealZv(ZVStruct *zvPtr) {
+void setupRealZv(ZVStruct *zvPtr) 
+{
 	int i;
 	int16 *ptr = pointBuffer;
 
@@ -356,29 +381,38 @@ void setupRealZv(ZVStruct *zvPtr) {
 	zvPtr->ZVY2 = -32000;
 	zvPtr->ZVZ2 = -32000;
 
-	for(i = 0; i < numOfPoints; i++) {
-		if(zvPtr->ZVX1 > (*ptr)) {
+	for(i = 0; i < numOfPoints; i++) 
+	{
+		if(zvPtr->ZVX1 > (*ptr)) 
+		{
 			zvPtr->ZVX1 = *(ptr);
 		} else {
-			if(zvPtr->ZVX2 < (*ptr)) {
+			if(zvPtr->ZVX2 < (*ptr)) 
+			{
 				zvPtr->ZVX2 = *(ptr);
 			}
 		}
 		ptr++;
 
-		if(zvPtr->ZVY1 > (*ptr)) {
+		if(zvPtr->ZVY1 > (*ptr)) 
+		{
 			zvPtr->ZVY1 = *(ptr);
-		} else {
-			if(zvPtr->ZVY2 < (*ptr)) {
+		} else 
+		{
+			if(zvPtr->ZVY2 < (*ptr)) 
+			{
 				zvPtr->ZVY2 = *(ptr);
 			}
 		}
 		ptr++;
 
-		if(zvPtr->ZVZ1 > (*ptr)) {
+		if(zvPtr->ZVZ1 > (*ptr)) 
+		{
 			zvPtr->ZVZ1 = *(ptr);
-		} else {
-			if(zvPtr->ZVZ2 < (*ptr)) {
+		} else 
+		{
+			if(zvPtr->ZVZ2 < (*ptr)) 
+			{
 				zvPtr->ZVZ2 = *(ptr);
 			}
 		}
@@ -387,7 +421,8 @@ void setupRealZv(ZVStruct *zvPtr) {
 	}
 }
 
-void doRealZv(actorStruct *actorPtr) {
+void doRealZv(actorStruct *actorPtr) 
+{
 	ZVStruct *zvPtr;
 
 	computeScreenBox(0, 0, 0, actorPtr->alpha, actorPtr->beta, actorPtr->gamma, listBody->get(actorPtr->bodyNum));
@@ -404,7 +439,8 @@ void doRealZv(actorStruct *actorPtr) {
 	zvPtr->ZVZ2 += actorPtr->roomZ;
 }
 
-void processLife(int lifeNum) {
+void processLife(int lifeNum) 
+{
 	int exitLife = 0;
 	//int switchVal = 0;
 	int var_6;
@@ -431,14 +467,14 @@ void processLife(int lifeNum) {
 		currentOpcode = *(int16 *)(currentLifePtr);
 		currentLifePtr += 2;
 
-		warning("%d:opcode: %04X\n", lifeNum, currentOpcode);
+		I_Warning("%d:opcode: %04X\n", lifeNum, currentOpcode);
 
 		if(currentOpcode & 0x8000) {
 			var_6 = *(int16 *)(currentLifePtr);
 			currentLifePtr += 2;
 
 			if(var_6 == -1) {
-				error("Unsupported newVar = -1\n");
+				I_Error("Unsupported newVar = -1\n");
 			} else {
 				currentProcessedActorIdx = objectTable[var_6].ownerIdx;
 
@@ -505,8 +541,9 @@ void processLife(int lifeNum) {
 							objectTable[var_6].frame = 0;
 						break;
 					}
-					case    LM_ANIM_RESET: {
-						ASSERT(g_fitd->getGameType() >= GType_JACK);
+					case    LM_ANIM_RESET: 
+					{
+						SYS_ASSERT(g_fitd->getGameType() >= GType_JACK);
 						objectTable[var_6].anim = *(int16 *)(currentLifePtr);
 						currentLifePtr += 2;
 						objectTable[var_6].animInfo = *(int16 *)(currentLifePtr);
@@ -616,7 +653,7 @@ void processLife(int lifeNum) {
 					}
 					////////////////////////////////////////////////////////////////////////
 					default: {
-						error("Unsupported opcode %X when actor isn't in floor\n", currentOpcode & 0x7FFF);
+						I_Error("Unsupported opcode %X when actor isn't in floor\n", currentOpcode & 0x7FFF);
 						break;
 					}
 					}
@@ -1253,7 +1290,7 @@ processOpcode:
 				lifeTempVar2 = *(int16 *)(currentLifePtr);
 				currentLifePtr += 2;
 
-				warning("Drop\n");
+				I_Warning("Drop\n");
 				// drop(lifeTempVar1, lifeTempVar2);
 
 				break;
@@ -1351,7 +1388,7 @@ processOpcode:
 
 				fadeOut(0x20, 0);
 
-				warning("ReadBook\n");
+				I_Warning("ReadBook\n");
 				//          readBook(lifeTempVar2+1, lifeTempVar1);
 
 				if(g_fitd->getGameType() == GType_AITD1) {
@@ -1511,7 +1548,7 @@ processOpcode:
 				break;
 			}
 			case LM_SHAKING: { // SHAKING
-				warning("Shaking\n");
+				I_Warning("Shaking\n");
 				//shakingState = shakingAmplitude = *(short int*)(currentLifePtr);
 				currentLifePtr += 2;
 
@@ -1527,7 +1564,7 @@ processOpcode:
 			}
 			case LM_WATER: { // ? shaking related
 				// TODO: Warning, AITD1/AITD2 diff
-				warning("Shaking related\n");
+				I_Warning("Shaking related\n");
 				//          mainLoopVar1 = shakeVar1 = *(short int*)(currentLifePtr);
 				currentLifePtr += 2;
 
@@ -1712,12 +1749,12 @@ processOpcode:
 				numParams = *(int16 *)(currentLifePtr);
 				currentLifePtr += 2;
 
-				ASSERT(numParams <= NUM_MAX_SEQUENCE_PARAM);
+				SYS_ASSERT(numParams <= NUM_MAX_SEQUENCE_PARAM);
 
 				for(i = 0; i < numParams; i++) {
-					sequenceParams[i].frame = READ_LE_UINT16(currentLifePtr);
+					sequenceParams[i].frame = EPI_LE_U16(currentLifePtr);
 					currentLifePtr += 2;
-					sequenceParams[i].sample = READ_LE_UINT16(currentLifePtr);
+					sequenceParams[i].sample = EPI_LE_U16(currentLifePtr);
 					currentLifePtr += 2;
 				}
 
@@ -1960,21 +1997,25 @@ processOpcode:
 				break;
 			}
 			////////////////////////////////////////////////////////////////////////
-			case LM_RETURN: {
+			case LM_RETURN: 
+			{
 				exitLife = 1;
 				break;
 			}
-			case LM_END: {
+			case LM_END: 
+			{
 				exitLife = 1;
 				break;
 			}
-			default: {
-				error("Unknown opcode %X in processLife\n", currentOpcode & 0x7FFF);
+			default: 
+			{
+				I_Error("Unknown opcode %X in processLife\n", currentOpcode & 0x7FFF);
 			}
 			}
 		}
 
-		if(var_6 != -1) {
+		if(var_6 != -1) 
+		{
 			currentProcessedActorIdx = currentLifeActorIdx;
 			currentProcessedActorPtr = currentLifeActorPtr;
 		}

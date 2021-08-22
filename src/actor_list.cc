@@ -39,8 +39,8 @@ int32 sortCompareFunction(const void *param1, const void *param2)
 	int32 y1;
 	int32 y2;
 
-	ASSERT(*(int32 *)param1 >= 0 && *(int32 *)param1 < NUM_MAX_ACTOR);
-	ASSERT(*(int32 *)param2 >= 0 && *(int32 *)param2 < NUM_MAX_ACTOR);
+	SYS_ASSERT(*(int32 *)param1 >= 0 && *(int32 *)param1 < NUM_MAX_ACTOR);
+	SYS_ASSERT(*(int32 *)param2 >= 0 && *(int32 *)param2 < NUM_MAX_ACTOR);
 
 	actor1Ptr = &actorTable[*(int32 *)param1];
 	actor2Ptr = &actorTable[*(int32 *)param2];

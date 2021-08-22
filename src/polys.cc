@@ -22,7 +22,8 @@
 
 #include "common.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
 typedef char ColorP;
 void hline(int x1, int x2, int y, ColorP c);

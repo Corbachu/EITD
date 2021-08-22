@@ -25,7 +25,7 @@
 //
 //----------------------------------------------------------------------------
 
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 #include "fitd.h"
 #include "common.h"
 #include "math.h"
@@ -694,7 +694,7 @@ void processTrack(void) {
 			break;
 		}
 		default: {
-			error("Unknown track macro %X\n", trackMacro);
+			I_Error("Unknown track macro %X\n", trackMacro);
 			break;
 		}
 		}
@@ -1121,7 +1121,7 @@ void processTrack2(void) {
                 break;
                 } */
 		default: {
-			error("Unknown track macro %X\n", trackMacro);
+			I_Error("Unknown track macro %X\n", trackMacro);
 			break;
 		}
 		}

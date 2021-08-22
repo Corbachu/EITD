@@ -25,20 +25,24 @@
 #include "pak.h"
 #include "file_access.h"
 #include "filestream.h"
-#include "common/forbidden.h"
-
-namespace Fitd {
+//
+namespace Fitd 
+{
 
 ResourceLoader *g_resourceLoader;
 
-bool ResourceLoader::getFileExists(const char *name) {
+bool ResourceLoader::getFileExists(const char *name) 
+{
 	Common::ReadFileStream file(name);
 	return file.isOpen();
 }
 
-char *ResourceLoader::loadFromItd(const char *name) {
+char *ResourceLoader::loadFromItd(const char *name) 
+{
 	Common::ReadFileStream file(name);
-	if(!file.isOpen()) {
+
+	if(!file.isOpen()) 
+	{
 		theEnd(0, name);
 		return NULL;
 	}
@@ -46,7 +50,8 @@ char *ResourceLoader::loadFromItd(const char *name) {
 	char *ptr;
 	ptr = new char[filesize];
 
-	if(!ptr) {
+	if(!ptr) 
+	{
 		theEnd(1, name);
 		return NULL;
 	}
@@ -55,12 +60,14 @@ char *ResourceLoader::loadFromItd(const char *name) {
 	return ptr;
 }
 
-int ResourceLoader::getFileSize(const char *name) {
+int ResourceLoader::getFileSize(const char *name) 
+{
 	Common::ReadFileStream file(name);
 	return file.size();
 }
 
-char *ResourceLoader::loadPakSafe(const char *name, int index) {
+char *ResourceLoader::loadPakSafe(const char *name, int index) 
+{
 	char *ptr;
 	ptr = loadPak(name, index);
 	if(!ptr) {
@@ -69,7 +76,8 @@ char *ResourceLoader::loadPakSafe(const char *name, int index) {
 	return ptr;
 }
 
-Common::SeekableReadStream *ResourceLoader::getFile(const char* name) {
+Common::SeekableReadStream *ResourceLoader::getFile(const char* name) 
+{
 	return new Common::ReadFileStream(name);
 }
 

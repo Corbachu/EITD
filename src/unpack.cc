@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 #include "common.h"
 
 #define _WINDOWS
@@ -551,7 +551,8 @@ int PAK_explode(unsigned char *srcBuffer, unsigned char *dstBuffer, unsigned int
 // ZLIB wrapper to deflate
 // --------------------------------------------------------------
 
-int PAK_deflate(unsigned char *srcBuffer, unsigned char *dstBuffer, unsigned int compressedSize, unsigned int uncompressedSize) {
+int PAK_deflate(unsigned char *srcBuffer, unsigned char *dstBuffer, unsigned int compressedSize, unsigned int uncompressedSize) 
+{
 	z_stream G;
 	G.next_in = srcBuffer;
 	G.avail_in = compressedSize;
@@ -571,8 +572,9 @@ int PAK_deflate(unsigned char *srcBuffer, unsigned char *dstBuffer, unsigned int
 // UTILS
 // --------------------------------------------------------------
 
-void PAK_Error(char *txt) {
-	error("%s", txt);
+void PAK_Error(char *txt) 
+{
+	I_Error("%s", txt);
 }
 
 } // end of namespace Fitd

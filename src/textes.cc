@@ -25,7 +25,7 @@
 //
 //----------------------------------------------------------------------------
 
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 #include "common.h"
 #include "fitd.h"
 #include "resource.h"
@@ -47,7 +47,8 @@ const char *languageNameTable[] = {
 	NULL,
 };
 
-Textes::Textes() {
+Textes::Textes() 
+{
 	int currentIndex;
 	char *currentPosInTextes;
 	int textCounter;
@@ -57,16 +58,19 @@ Textes::Textes() {
 
 	_tabTextes = new textEntryStruct[NUM_MAX_TEXT_ENTRY]; // 2000 = 250 * 8
 
-	ASSERT_PTR(_tabTextes);
+	//SYS_ASSERT_PTR(_tabTextes);
 
-	if(!_tabTextes) {
+	if(!_tabTextes) 
+	{
 		theEnd(1, "TabTextes");
 	}
 
 	// setup languageNameString
-	if(g_fitd->getGameType() == GType_AITD3) {
+	if(g_fitd->getGameType() == GType_AITD3) 
+	{
 		strcpy(languageNameString, "TEXTES");
-	} else {
+	} else 
+	{
 		int i = 0;
 
 		while(languageNameTable[i]) {
@@ -85,7 +89,7 @@ Textes::Textes() {
 	}
 
 	if(!languageNameString[0]) {
-		error("Unable to detect language file..\n");
+		I_Error("Unable to detect language file..\n");
 	}
 
 	char *systemTextes = g_resourceLoader->loadPakSafe(languageNameString, 0); // todo: use real language name

@@ -27,7 +27,8 @@
 
 namespace Fitd {
 
-void setupScreen(void) {
+void setupScreen(void) 
+{
 	screen = (char *)malloc(64800);
 
 	screenBufferSize = 64800;
@@ -38,7 +39,8 @@ void setupScreen(void) {
 
 }
 
-void flipScreen() {
+void flipScreen() 
+{
 	int i;
 	char paletteRGBA[256*4];
 	char *outPtr = scaledScreen;
@@ -50,7 +52,8 @@ void flipScreen() {
 
 	memcpy(unkScreenVar, screen, 320 * 200);
 
-	for(i = 0; i < 256; i++) {
+	for(i = 0; i < 256; i++) 
+	{
 		paletteRGBA[i*4] = g_driver->_palette[i*3];
 		paletteRGBA[i*4+1] = g_driver->_palette[i*3+1];
 		paletteRGBA[i*4+2] = g_driver->_palette[i*3+2];
@@ -60,17 +63,20 @@ void flipScreen() {
 	outPtr = scaledScreen;
 	inPtr = unkScreenVar;
 
-	for(i = 0; i < 200; i++) {
+	for(i = 0; i < 200; i++) 
+	{
 		int j;
 		char *copySource = outPtr;
 
-		for(j = 0; j < 320; j++) {
+		for(j = 0; j < 320; j++) 
+		{
 			*(outPtr++) = *(inPtr);
 			*(outPtr++) = *(inPtr++);
 		}
 
 		// copy line
-		for(j = 0; j < 640; j++) {
+		for(j = 0; j < 640; j++) 
+		{
 			*(outPtr++) = *(copySource++);
 		}
 
@@ -80,7 +86,8 @@ void flipScreen() {
 	g_driver->flip((unsigned char *)scaledScreen);
 }
 
-void flushScreen(void) {
+void flushScreen(void) 
+{
 	int i;
 	int j;
 

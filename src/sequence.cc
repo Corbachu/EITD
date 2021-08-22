@@ -23,10 +23,12 @@
 #include "fitd.h"
 #include "common.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
 void convertPaletteIfRequired(unsigned char *lpalette) {
-	if(g_fitd->getGameType() >= GType_JACK && g_fitd->getGameType() < GType_AITD3) {
+	if(g_fitd->getGameType() >= GType_JACK && g_fitd->getGameType() < GType_AITD3) 
+	{
 		int i;
 		unsigned char *ptr2 = lpalette;
 		for(i = 0; i < 256; i++) {
@@ -41,7 +43,8 @@ void convertPaletteIfRequired(unsigned char *lpalette) {
 	}
 }
 
-const char *sequenceListAITD2[] = {
+const char *sequenceListAITD2[] = 
+{
 	"BATL",
 	"GRAP",
 	"CLE1",
@@ -77,50 +80,65 @@ const char *sequenceListAITD2[] = {
 	"LAST"
 };
 
-void unapckSequenceFrame(unsigned char *source, unsigned char *dest) {
+void unapckSequenceFrame(unsigned char *source, unsigned char *dest) 
+{
 	unsigned char byteCode;
 
 	byteCode = *(source++);
 
-	while(byteCode) {
-		if(!(--byteCode)) { // change pixel or skip pixel
+	while(byteCode) 
+	{
+		if(!(--byteCode)) 
+		{ // change pixel or skip pixel
 			unsigned char changeColor;
 
 			changeColor = *(source++);
 
-			if(changeColor) {
+			if(changeColor) 
+			{
 				*(dest++) = changeColor;
-			} else {
+			} else 
+			{
 				dest++;
 			}
-		} else if(!(--byteCode)) { // change 2 pixels or skip 2 pixels
+		} else if(!(--byteCode)) 
+		{ // change 2 pixels or skip 2 pixels
 			unsigned char changeColor;
 
 			changeColor = *(source++);
 
-			if(changeColor) {
+			if(changeColor) 
+			{
 				*(dest++) = changeColor;
 				*(dest++) = changeColor;
-			} else {
+			} else 
+			{
 				dest += 2;
 			}
-		} else if(!(--byteCode)) { // fill or skip
+		} else if(!(--byteCode)) 
+		{ // fill or skip
 			unsigned char size;
 			unsigned char fillColor;
 
 			size = *(source++);
 			fillColor = *(source++);
 
-			if(fillColor) {
+			if(fillColor) 
+			{
 				int i;
 
-				for(i = 0; i < size; i++) {
+				for(i = 0; i < size; i++) 
+				{
 					*(dest++) = fillColor;
 				}
-			} else {
+			} 
+			else 
+			{
 				dest += size;
 			}
-		} else { // large fill of skip
+		} 
+		else 
+		{ // large fill of skip
 			unsigned short int size;
 			unsigned char fillColor;
 
@@ -128,13 +146,17 @@ void unapckSequenceFrame(unsigned char *source, unsigned char *dest) {
 			source += 2;
 			fillColor = *(source++);
 
-			if(fillColor) {
+			if(fillColor) 
+			{
 				int i;
 
-				for(i = 0; i < size; i++) {
+				for(i = 0; i < size; i++) 
+				{
 					*(dest++) = fillColor;
 				}
-			} else {
+			} 
+			else 
+			{
 				dest += size;
 			}
 		}
@@ -143,7 +165,8 @@ void unapckSequenceFrame(unsigned char *source, unsigned char *dest) {
 	}
 }
 
-void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) {
+void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) 
+{
 #define SPEED 70              /* Ticks per Frame */
 #define SLEEP_MIN 20          /* Minimum time a sleep takes, usually 2*GRAN */
 #define SLEEP_GRAN 1         /* Granularity of sleep */
@@ -158,11 +181,13 @@ void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) {
 	int var_8 = 1;
 	unsigned char localPalette[0x300];
 
-	while(!var_6) {
+	while(!var_6) 
+	{
 		int si = 0;
 		int sequenceParamIdx;
 
-		while(si < var_8) {
+		while(si < var_8) 
+		{
 			char buffer[256];
 			frames++;
 			t_start = g_fitd->getTicks();
@@ -171,18 +196,22 @@ void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) {
 
 			g_fitd->setTimer(timeGlobal);
 
-			if(g_fitd->getGameType() == GType_AITD2) {
+			if(g_fitd->getGameType() == GType_AITD2) 
+			{
 				strcpy(buffer, sequenceListAITD2[sequenceIdx]);
 			}
-			if(g_fitd->getGameType() == GType_AITD3) {
+			if(g_fitd->getGameType() == GType_AITD3) 
+			{
 				sprintf(buffer, "AN%d", sequenceIdx);
 			}
 
-			if(!loadPakToPtr(buffer, si, screen)) {
+			if(!loadPakToPtr(buffer, si, screen)) 
+			{
 				theEnd(0, buffer);
 			}
 
-			if(!si) { // first frame
+			if(!si) 
+			{ // first frame
 				memcpy(localPalette, screen, 0x300); // copy palette
 				memcpy(aux, screen + 0x300, 64000);
 				var_8 = *(unsigned short int *)(screen + 64768);
@@ -190,7 +219,8 @@ void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) {
 				if(g_fitd->getGameType() < GType_AITD3)
 					convertPaletteIfRequired(localPalette);
 
-				if(var_4 != 0) {
+				if(var_4 != 0) 
+				{
 					/*      if(fadeStart & 1)
 					 {
 					 fadeOut(0x10,0);
@@ -205,20 +235,25 @@ void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) {
 					g_driver->setPalette(localPalette);
 					copyPalette((char*)localPalette,(char*) g_driver->_palette);
 				}
-			} else { // not first frame
+			} else 
+			{ // not first frame
 				uint32 frameSize;
 
 				frameSize = *(uint32 *)screen;
 
-				if(frameSize < 64000) { // key frame
+				if(frameSize < 64000) 
+				{ // key frame
 					unapckSequenceFrame((unsigned char *)screen + 4, (unsigned char *)aux);
-				} else { // delta frame
+				} else 
+				{ // delta frame
 					copyToScreen(screen, aux);
 				}
 			}
 
-			for(sequenceParamIdx = 0; sequenceParamIdx < numSequenceParam; sequenceParamIdx++) {
-				if(sequenceParams[sequenceParamIdx].frame == si) {
+			for(sequenceParamIdx = 0; sequenceParamIdx < numSequenceParam; sequenceParamIdx++) 
+			{
+				if(sequenceParams[sequenceParamIdx].frame == si) 
+				{
 					playSound(sequenceParams[sequenceParamIdx].sample);
 				}
 			}
@@ -238,10 +273,12 @@ void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) {
 			t_end = t_start + SPEED;
 			t_left = t_start - g_fitd->getTicks() + SPEED;
 
-			if(t_left > 0) {
+			if(t_left > 0) 
+			{
 				if(t_left > SLEEP_MIN)
 					g_fitd->delay(t_left - SLEEP_GRAN);
-				while(g_fitd->getTicks() < t_end) {
+				while(g_fitd->getTicks() < t_end) 
+				{
 					q++;
 				};
 			}
@@ -249,7 +286,8 @@ void playSequence(int sequenceIdx, int fadeStart, int fadeOutVar) {
 
 		fadeOutVar--;
 
-		if(fadeOutVar == 0) {
+		if(fadeOutVar == 0) 
+		{
 			var_6 = 1;
 		}
 	}

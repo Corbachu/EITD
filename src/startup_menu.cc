@@ -23,19 +23,24 @@
 #include "osystem.h"
 #include "common.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
-void drawStartupMenu(int selectedEntry) {
+void drawStartupMenu(int selectedEntry) 
+{
 	int currentY = 76;
 	int currentTextNum = 0;
 
 	drawAITDBox(160, 100, 320, 80);
 
-	while(currentTextNum < 3) {
-		if(currentTextNum == selectedEntry) { // hilight selected entry
+	while(currentTextNum < 3) 
+	{
+		if(currentTextNum == selectedEntry) 
+		{ // hilight selected entry
 			fillBox(10, currentY, 309, currentY + 16, 100);
 			drawSlectedText(160, currentY, currentTextNum + 11, 15, 4);
-		} else {
+		} else 
+		{
 			drawText(160, currentY, currentTextNum + 11, 4);
 		}
 
@@ -44,7 +49,8 @@ void drawStartupMenu(int selectedEntry) {
 	}
 }
 
-int processStartupMenu(void) {
+int processStartupMenu(void) 
+{
 	int currentSelectedEntry = 0;
 	unsigned int chrono;
 	int selectedEntry = -1;
@@ -67,17 +73,20 @@ int processStartupMenu(void) {
 		g_driver->startFrame();
 #endif
 
-		if(selectedEntry != -1 || evalChrono(&chrono) > 0x10000) {
+		if(selectedEntry != -1 || evalChrono(&chrono) > 0x10000) 
+		{
 			break;
 		}
 
 		process_events();
 		readKeyboard();
 
-		if(inputKey & 1) { // up key
+		if(inputKey & 1) 
+		{ // up key
 			currentSelectedEntry--;
 
-			if(currentSelectedEntry < 0) {
+			if(currentSelectedEntry < 0) 
+			{
 				currentSelectedEntry = 2;
 			}
 
@@ -87,7 +96,8 @@ int processStartupMenu(void) {
 
 			startChrono(&chrono);
 
-			while(inputKey) {
+			while(inputKey) 
+			{
 				readKeyboard();
 			}
 		}
@@ -96,7 +106,8 @@ int processStartupMenu(void) {
 		if(inputKey & 2) { // down key
 			currentSelectedEntry++;
 
-			if(currentSelectedEntry > 2) {
+			if(currentSelectedEntry > 2) 
+			{
 				currentSelectedEntry = 0;
 			}
 
@@ -106,12 +117,14 @@ int processStartupMenu(void) {
 
 			startChrono(&chrono);
 
-			while(inputKey) {
+			while(inputKey) 
+			{
 				readKeyboard();
 			}
 		}
 
-		if(input2 == 28 || (input2 != 28 && input1 != 0)) { // select current entry
+		if(input2 == 28 || (input2 != 28 && input1 != 0)) 
+		{ // select current entry
 			selectedEntry = currentSelectedEntry;
 		}
 #ifdef USE_GL
@@ -120,12 +133,14 @@ int processStartupMenu(void) {
 #endif
 	}
 
-	if(selectedEntry == 2) { // if exit game, do not fade
+	if(selectedEntry == 2) 
+	{ // if exit game, do not fade
 		fadeOut(16, 0);
 	}
 
 	readKeyboard();
-	while(inputKey) {
+	while(inputKey) 
+	{
 		readKeyboard();
 	}
 
