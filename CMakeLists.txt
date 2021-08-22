@@ -14,7 +14,7 @@ if( COMMAND cmake_policy )
 endif()
 
 IF (${CMAKE_BINARY_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
-        MESSAGE( FATAL_ERROR "In-tree Builds are NOT supported.")
+        MESSAGE( "In-tree Builds are NOT supported.")
 ENDIF (${CMAKE_BINARY_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 
 list( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake )
@@ -44,8 +44,7 @@ if(MINGW AND MINGW_LINK_STATIC)
 endif()
 
 find_package( ZLIB )
-find_package(SDL2)
-find_package(SDL_MIXER2)
+
 
 
 if(APPLE)
@@ -65,23 +64,23 @@ else()
 endif()
 
 
-if(NOT SDL_MIXER_FOUND OR INTERNAL_SDL_MIXER)
-	message(STATUS "Using internal SDL_MIXER")
-	set(SDL_MIXER_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL_mixer-1.2.12/include)
-	add_subdirectory(deps/SDL_mixer-1.2.12)
-	set(SDL_MIXER_LIBRARIES SDL_MIXER)
-else()
-	message(STATUS "Using system SDL_MIXER, includes found at ${SDL_MIXER_INCLUDE_DIRS}")
-endif()
+#if(NOT SDL_MIXER_FOUND OR INTERNAL_SDL_MIXER)
+#	message(STATUS "Using internal SDL_MIXER")
+#	set(SDL_MIXER_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL_mixer-1.2.12/include)
+#	add_subdirectory(deps/SDL_mixer-1.2.12)
+#	set(SDL_MIXER_LIBRARIES SDL_MIXER)
+#else()
+#	message(STATUS "Using system SDL_MIXER, includes found at ${SDL_MIXER_INCLUDE_DIRS}")
+#endif()
 
-if(NOT SDL_FOUND OR INTERNAL_SDL)
-	message(STATUS "Using internal SDL1")
-	set(SDL_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL-1.2.15/include)
+#if(NOT SDL_FOUND OR INTERNAL_SDL)
+#	message(STATUS "Using internal SDL1")
+#	set(SDL_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL-1.2.15/include)
 	#add_subdirectory(deps/SDL-1.2.15)
-	set(SDL_LIBRARIES SDL)
-else()
-	message(STATUS "Using system SDL, includes found at ${SDL_INCLUDE_DIRS}")
-endif()
+#	set(SDL_LIBRARIES SDL)
+#else()
+#	message(STATUS "Using system SDL, includes found at ${SDL_INCLUDE_DIRS}")
+#endif()
 
 
 
@@ -149,18 +148,6 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/modules)
 
 # See /VSLibs/lib_versions.txt [libs have been compiled with MSVC 2017!]
 # CA: 11/30/18 - For MSVC, libs are no longer required to be downloaded seperately, they now exist in /libs/msvc/
-if (FORCE_STATIC_MSVC_LIBS)
-	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-		set( SDL_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL-1.2.15/lib/x64/SDL.lib" )
-		set( SDLMAIN_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL-1.2.15/lib/x64/SDLmain.lib" )
-		set( SDL_MIXER_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL_mixer-1.2.12/lib/x64/SDL_mixer.lib" )
-	elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-		set( SDL_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL-1.2.15/lib/x86/SDL.lib" )
-		set( SDLMAIN_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL-1.2.15/lib/x86/SDLmain.lib" )
-		set( SDL_MIXER_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/deps/SDL_mixer-1.2.12/lib/x86/SDL_mixer.lib" )
-	endif()
-endif(FORCE_STATIC_MSVC_LIBS)
-#message(${CMAKE_MODULE_PATH})
 
 # OpenGL
 if (NOT VITA)
@@ -178,16 +165,15 @@ endif()
 #find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIR})
 
-include_directories(${SDL_INCLUDE_DIRS})
-
-include_directories(${SDL_MIXER_INCLUDE_DIR})
-
 # dumb
 #include_directories(${LIBDUMB_INCLUDE_DIR})
 
 # EDGE
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/sse2neon)
 set(EITD_SOURCES
+deps/miniz/miniz.cc
+deps/miniz/miniz.h
+		
 src/actor.cc
 src/actor_list.cc
 src/aitd_box.cc
@@ -228,7 +214,7 @@ src/screen.cc
 src/sequence.cc
 src/startup_menu.cc
 src/system_menu.cc
-src/tatou.cc
+src/e_tatou.cc
 src/textes.cc
 src/thread_code.cc
 src/timer.cc
@@ -247,7 +233,7 @@ set(EITD_WIN32_SOURCES
 	#src/system/win32/w32_net.cc
 	src/system/win32/w32_system.cc
 	#src/system/win32/i_exception.cc
-	#epi/epi_win32.cc
+	epi/epi_win32.cc
 	#epi/filesystem_win32.cc
 )
 
@@ -302,15 +288,8 @@ endif()
 add_executable ( EITD ${EITD_SOURCES} )
 
 target_link_libraries(EITD
-	${SDL_LIBRARIES}
-	${SDL_MIXER_LIBRARIES}
-	#Ogg::ogg
-	#Vorbis::vorbis Vorbis::vorbisenc Vorbis::vorbisfile
-#	${VORBIS_LIBRARIES} ${VORBISFILE_LIBRARIES}
-	ZLIB::ZLIB
-	#${PHYSFS_LIBRARY}
-	#	${LIBDUMB_LIBRARY}
-	#	${SDLKitchensink_STATIC_LIBRARY}
+	SDL2 
+	SDL2_mixer
 )
 
 if(MINGW)
@@ -332,6 +311,17 @@ if (WIN32)
 		Setupapi
 		Version
 	)
+    target_include_directories(EITD PRIVATE
+            deps/sdl2/include/
+            deps/sdl2/include/SDL2/
+            deps/sdl2_mixer/include/
+            deps/sdl2_mixer/include/SDL2/
+            )
+    target_link_directories(EITD PRIVATE
+            deps/sdl2/lib/
+            deps/sdl2_mixer/lib/
+            )
+
 elseif(APPLE)
 	set_target_properties(EITD PROPERTIES LINK_FLAGS "-framework OpenGL -framework Cocoa -framework IOKit")
 	target_link_libraries(EITD SDL2 COCOA_LIBRARY stdc++ "-framework Foundation" "-framework Cocoa" "-framework IOKIT" objc)
