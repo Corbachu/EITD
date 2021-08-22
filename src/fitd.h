@@ -34,7 +34,8 @@
 #include "common/endian.h"
 #define HAVE_CONFIG_H
 #else
-#include "common/endian.h"
+#include "epi/types.h"
+#include "epi/endianess.h"
 #endif
 #include "cvars.h"
 

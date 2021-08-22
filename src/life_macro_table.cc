@@ -22,9 +22,11 @@
 
 #include "common.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
-enumLifeMacro AITD2LifeMacroTable[] = {
+enumLifeMacro AITD2LifeMacroTable[] = 
+{
 	LM_DO_MOVE,         //0
 	LM_ANIM_ONCE,
 	LM_ANIM_ALL_ONCE,
@@ -127,7 +129,8 @@ enumLifeMacro AITD2LifeMacroTable[] = {
 	LM_FIRE_UP_DOWN, // AITD3 only
 };
 
-enumLifeMacro AITD1LifeMacroTable[] = {
+enumLifeMacro AITD1LifeMacroTable[] = 
+{
 	LM_DO_MOVE,
 	LM_ANIM_ONCE,
 	LM_ANIM_ALL_ONCE,

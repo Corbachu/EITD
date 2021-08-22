@@ -25,12 +25,13 @@
 //
 //----------------------------------------------------------------------------
 
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 #include "fitd.h"
 #include "common.h"
 #include "fmopl.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
 int musicVolume = 0x7F;
 
@@ -745,7 +746,7 @@ void command5(channelTable2Element *entry, int param, uint8 *ptr) {
 }
 
 void command6(channelTable2Element *entry, int param, uint8 *ptr) {
-	error("Music: Exiting, error code -1");
+	I_Error("Music: Exiting, error code -1");
 }
 
 musicCommandType musicCommandTable[10] = {
@@ -773,7 +774,7 @@ void executeMusicCommand(channelTable2Element *entry) {
 		entry->var18 = 0;
 	} else {
 		if(entry->var1A != entry->var1D) {
-			error("Music: Exiting, error code 1");
+			I_Error("ExecMusCMD: Exiting, error code 1");
 		}
 
 		entry->varE--; // voice delay
@@ -789,8 +790,8 @@ void executeMusicCommand(channelTable2Element *entry) {
 		opcode = *(uint16 *)(entry->commandPtr);
 		entry->commandPtr += 2;
 
-		ASSERT(musicCommandTable[opcode&0x7F]);
-		ASSERT((opcode & 0x7F) <= 10);
+		SYS_ASSERT(musicCommandTable[opcode&0x7F]);
+		SYS_ASSERT((opcode & 0x7F) <= 10);
 
 		musicCommandTable[opcode&0x7F](entry, opcode >> 8, entry->commandPtr);
 	} while(!(opcode & 0x80));
@@ -904,7 +905,7 @@ void changeOuputLevel(uint8 value, uint8 *data, int bp) {
 
 	outputLevel = 0x3F - ((((outputLevel * bp) * 2) + 0x7F) / 0xFE);
 
-	ASSERT((outputLevel & 0x3F) == outputLevel);
+	SYS_ASSERT((outputLevel & 0x3F) == outputLevel);
 
 	keyScaleLevel = data[0] & 0xC0;
 
@@ -1056,7 +1057,7 @@ int musicFade(void *param) {
 		{
 			if(channelTable2[i].dataPtr) {
 				if(dx & 0x100) {
-					error("Music: Exiting, error code 1");
+					I_Error("Music: Exiting, error code 1");
 				}
 
 				if(dx & 0x40) {
@@ -1079,11 +1080,11 @@ int musicFade(void *param) {
 				}
 
 				if(dx & 0x20) {
-					error("Music: Exiting, error code 1");
+					I_Error("Music: Exiting, error code 1");
 				}
 
 				if(dx & 0x2000) {
-					error("Music: Exiting, error code 1");
+					I_Error("Music: Exiting, error code 1");
 				}
 
 				if(dx & 0x8000) {
@@ -1091,7 +1092,7 @@ int musicFade(void *param) {
 				}
 
 				if(dx & 0x1000) {
-					error("Music: Exiting, error code 1");
+					I_Error("Music: Exiting, error code 1");
 				}
 
 				if(dx & 0x10) { // still running ?
@@ -1132,7 +1133,7 @@ musicDrvFunctionType musicDrvFunc[14] = {
 
 int callMusicDrv(int commandArg, void *ptr) {
 	if(!musicDrvFunc[commandArg]) {
-		error("Music: Exiting, error code 1");
+		I_Error("Music: Exiting, error code 1");
 	}
 
 	return musicDrvFunc[commandArg](ptr);

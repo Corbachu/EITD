@@ -24,16 +24,11 @@
 // GCC/Linux/OSX and this does not work or invalidates your build, please promptly report
 // it so we can come up with another solution. Just open up an ISSUE or a PR via Github if
 // it does not work and/or you have a better way.
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_thread.h>// Keys
+#include <SDL2/SDL_opengl.h>// opengl
 
-#ifdef USESDL2
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_keycode.h"
-#include "SDL2/SDL_opengl.h"
-#else
-#include "SDL.h"
-#include "SDL_thread.h"// Keys
-#include "SDL_opengl.h"// opengl
-#endif
 
 
 #endif /* __SDL_SYSTEM_INTERNAL_H__ */

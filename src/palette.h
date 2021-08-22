@@ -23,11 +23,14 @@
 #ifndef FITD_PALETTE_H
 #define FITD_PALETTE_H
 
-//#include "common/endian.h"
+#include "epi/types.h"
+#include "epi/endianess.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
-class Palette {
+class Palette 
+{
 	char *_data;
 public:
 	Palette();

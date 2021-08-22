@@ -28,7 +28,8 @@
 #include "fitd.h"
 #include "common.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
 /*
  Room data:
@@ -49,7 +50,7 @@ cameraDataStruct *cameraDataTable[NUM_MAX_CAMERA_IN_ROOM];
 cameraZoneDefStruct *currentCameraZoneList[NUM_MAX_CAMERA_IN_ROOM];
 
 roomDefStruct *getRoomData(int roomNumber) {
-	return (roomDefStruct *)(etageVar0 + READ_LE_UINT32(etageVar0 + roomNumber * 4));
+	return (roomDefStruct *)(etageVar0 + EPI_LE_U32(etageVar0 + roomNumber * 4));
 }
 
 int getNumberOfRoom() {
@@ -68,10 +69,10 @@ int getNumberOfRoom() {
 		return PAK_getNumFiles(buffer);
 	} else {
 
-		int numMax = (((READ_LE_UINT32(etageVar0)) / 4));
+		int numMax = (((EPI_LE_U32(etageVar0)) / 4));
 
 		for(i = 0; i < numMax; i++) {
-			if(etageVar0Size >= READ_LE_UINT32(etageVar0 + i * 4)) {
+			if(etageVar0Size >= EPI_LE_U32(etageVar0 + i * 4)) {
 				j++;
 			} else {
 				return j;
@@ -93,7 +94,7 @@ void loadRoom(int roomNumber) {
 
 	freezeTime();
 
-	ASSERT(roomNumber >= 0);
+	SYS_ASSERT(roomNumber >= 0);
 
 	if(currentCamera == -1) {
 		oldCameraIdx = -1;
@@ -115,7 +116,7 @@ void loadRoom(int roomNumber) {
 
 	numCameraInRoom = roomDataTable[roomNumber].numCameraInRoom;
 
-	ASSERT(numCameraInRoom < NUM_MAX_CAMERA_IN_ROOM);
+	SYS_ASSERT(numCameraInRoom < NUM_MAX_CAMERA_IN_ROOM);
 
 	/*
 	 var_20 = cameraPtr + roomDataPtr->offsetToPosDef;
@@ -128,7 +129,7 @@ void loadRoom(int roomNumber) {
 	 var_20 += 2;
 	 roomZoneData = var_20;*/
 
-	ASSERT(numCameraInRoom < NUM_MAX_CAMERA_IN_ROOM);
+	SYS_ASSERT(numCameraInRoom < NUM_MAX_CAMERA_IN_ROOM);
 
 	for(i = 0; i < numCameraInRoom; i++) { // build all the camera list
 		unsigned int currentCameraIdx;
@@ -136,7 +137,7 @@ void loadRoom(int roomNumber) {
 
 		currentCameraIdx = roomDataTable[currentDisplayedRoom].cameraIdxTable[i]; // indexes are between the roomDefStruct and the first zone data
 
-		ASSERT(currentCameraIdx <= numGlobalCamera);
+		SYS_ASSERT(currentCameraIdx <= numGlobalCamera);
 
 		if(oldCameraIdx == currentCameraIdx) {
 			var_1A = i;
@@ -144,7 +145,7 @@ void loadRoom(int roomNumber) {
 		}
 
 		if(g_fitd->getGameType() < GType_AITD3) {
-			roomVar5[i] = etageVar1 + READ_LE_UINT32(etageVar1 + currentCameraIdx * 4);
+			roomVar5[i] = etageVar1 + EPI_LE_U32(etageVar1 + currentCameraIdx * 4);
 		}
 
 		cameraDataTable[i] = &(globalCameraDataTable[currentCameraIdx]);
@@ -157,7 +158,7 @@ void loadRoom(int roomNumber) {
 				break;
 		}
 
-		ASSERT(cameraDataTable[i]->_cameraZoneDefTable[j].dummy1 == currentDisplayedRoom);
+		SYS_ASSERT(cameraDataTable[i]->_cameraZoneDefTable[j].dummy1 == currentDisplayedRoom);
 
 		currentCameraZoneList[i] = &cameraDataTable[i]->_cameraZoneDefTable[j];
 	}

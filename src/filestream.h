@@ -33,14 +33,15 @@
 #include "common/endian.h"
 #define HAVE_CONFIG_H
 #else
-#include "common/endian.h"
+#include "epi/endianess.h"
 #endif
 
 #include "common/stream.h"
 
 namespace Common {
 
-class ReadFileStream : public SeekableReadStream {
+class ReadFileStream : public SeekableReadStream 
+{
 	void *_fileHandle;
 public:
 	ReadFileStream();

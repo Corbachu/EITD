@@ -28,8 +28,15 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
+#include "epi/epi.h"
+#include "system/i_system.h"
+
 #ifdef MACOSX
 #define UNIX
+#endif
+
+#ifdef WIN32
+#include "system/win32/w32_sysinc.h"
 #endif
 
 #define NUM_MAX_CAMERA_IN_ROOM 20
@@ -40,25 +47,26 @@
 #define USE_GL
 #endif
 
+#ifdef USE_GL
+#   if defined(__APPLE__)
+#       include <OpenGL/gl.h>
+#       include <OpenGL/glu.h>
+#   else
+#       include <GL/gl.h>      // Header File For The OpenGL32 Library
+#       include <GL/glu.h>     // Header File For The GLu32 Library
+#   endif
+#endif
+
 #ifdef HAVE_CONFIG_H
 #undef HAVE_CONFIG_H
 #include "common/endian.h"
 #define HAVE_CONFIG_H
 #else
-#include "common/endian.h"
+#include "epi/types.h"
+#include "epi/endianess.h"
 #endif
 
-#ifdef _DEBUG
-#define ASSERT(exp) assert(exp)
-#else
-#define ASSERT(exp)
-#endif
-
-#ifdef _DEBUG
-#define ASSERT_PTR(exp) assert(exp)
-#else
-#define ASSERT_PTR(exp)
-#endif
+#include "epi/asserts.h"
 
 //////////////// GAME SPECIFIC DEFINES
 
@@ -114,6 +122,7 @@ int triangulate_polygon(int ncontours, int cntr[], double(*vertices)[2], int (*t
 #include "zv.h"
 #include "music.h"
 
+
 // debugger
 #ifdef INTERNAL_DEBUGGER
 #include "debugger.h"
@@ -125,7 +134,17 @@ int triangulate_polygon(int ncontours, int cntr[], double(*vertices)[2], int (*t
 #include "life_2.h"
 #include "eval_var.h"
 
-////
+//// C++
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include <string.h>
+#ifdef WIN32
+#include <search.h>
+#endif
+
+
 
 // Disable byte-swapping for now.
 #ifdef BIG_ENDIAN
@@ -154,5 +173,5 @@ FORCEINLINE uint32 READ_BE_U32(void *ptr)
 	return (((uint8 *)ptr)[3] << 24) | (((uint8 *)ptr)[2] << 16) | (((uint8 *)ptr)[1] << 8) | ((uint8 *)ptr)[0];
 #endif
 }
-#include "common/forbidden.h"
+
 #endif

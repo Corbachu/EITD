@@ -28,8 +28,8 @@
 // seg 55
 #include "filestream.h"
 #include "common.h"
-#include "common/forbidden.h"
-#include "common/textconsole.h"
+//#include "common/forbidden.h"
+//#include "common/textconsole.h" w32_system
 
 namespace Fitd 
 {
@@ -222,11 +222,11 @@ char *loadPak(const char *name, int index)
 
 		if(pakInfo.offset) 
 		{
-			ASSERT(pakInfo.offset < 256);
+			SYS_ASSERT(pakInfo.offset < 256);
 
 			file.read((unsigned char*)nameBuffer, pakInfo.offset);
 #ifdef INTERNAL_DEBUGGER
-			warning("Loading %s/%s\n", name, nameBuffer + 2);
+			I_Warning("Loading %s/%s\n", name, nameBuffer + 2);
 #endif
 		} else 
 		{

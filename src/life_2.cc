@@ -21,7 +21,8 @@
  */
 #include "common.h"
 
-namespace Fitd {
+namespace Fitd 
+{
 
 #if 0
 
@@ -1104,7 +1105,7 @@ processOpcode:
 				numParams = *(short int *)(currentLifePtr);
 				currentLifePtr += 2;
 
-				ASSERT(numParams <= NUM_MAX_SEQUENCE_PARAM);
+				SYS_ASSERT(numParams <= NUM_MAX_SEQUENCE_PARAM);
 
 				for(i = 0; i < numParams; i++) {
 					sequenceParams[i].frame = READ_LE_U16(currentLifePtr);

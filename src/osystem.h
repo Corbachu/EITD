@@ -43,7 +43,7 @@
 #include "common/endian.h"
 #define HAVE_CONFIG_H
 #else
-#include "common/endian.h"
+#include "epi/endianess.h"
 #endif
 #ifdef INTERNAL_DEBUGGER
 #include "debug_font.h"

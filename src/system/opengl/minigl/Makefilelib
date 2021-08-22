@@ -23,7 +23,7 @@ include $(KOS_BASE)/addons/Makefile.prefab
 
 KOS_CFLAGS+= -O3 -mpretend-cmove -mrelax -mfused-madd -ffast-math -I${KOS_BASE}/include -Isrc -Iinclude 
 
-#KOS_CFLAGS+= -DTODO_USE_ASSERT
+#KOS_CFLAGS+= -DTODO_USE_SYS_ASSERT
 #KOS_CFLAGS+= -DTODO_WARN
 
 CFLAGS+= -O3

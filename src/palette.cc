@@ -22,6 +22,10 @@
 
 #include "palette.h"
 #include "fitd.h"
+#include <cstdio>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
 
 namespace Fitd {
 

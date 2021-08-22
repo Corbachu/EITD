@@ -20,7 +20,7 @@
  *
  */
 
-#include "common/textconsole.h"
+//#include "common/textconsole.h" w32_system
 #include "fitd.h"
 #include "common.h"
 
@@ -136,8 +136,8 @@ int32 testZvEndAnim(actorStruct *actorPtr, char *animPtr, int32 param)
 	int16 var_18;
 	ZVStruct localZv;
 
-	ASSERT(actorPtr);
-	ASSERT(animPtr);
+	SYS_ASSERT(actorPtr);
+	SYS_ASSERT(animPtr);
 
 	var_16 = *(int16 *)(animPtr);
 	animPtr += 2;
@@ -230,7 +230,7 @@ int evalVar(void)
 					break;
 				}
 				default: {
-					error("Unsupported evalVar %X when actor not in room !\n", var1 & 0x7FFF);
+					I_Error("Unsupported evalVar %X when actor not in room !\n", var1 & 0x7FFF);
 				}
 				}
 			}
@@ -494,7 +494,7 @@ int evalVar(void)
 				break;
 			}
 			default: {
-				error("Unhandled test type %X in evalVar\n", var1);
+				I_Error("Unhandled test type %X in evalVar\n", var1);
 				break;
 			}
 			}
@@ -543,7 +543,7 @@ int evalVar2(void) {
 					break;
 				}
 				default: {
-					error("Unsupported evalVar %X when actor not in room !\n", var1 & 0x7FFF);
+					I_Error("Unsupported evalVar %X when actor not in room !\n", var1 & 0x7FFF);
 				}
 				}
 			}
@@ -811,7 +811,7 @@ int evalVar2(void) {
 				break;
 			}
 			default: {
-				error("Unhandled test type %X in evalVar\n", var1);
+				I_Error("Unhandled test type %X in evalVar\n", var1);
 				break;
 			}
 			}

@@ -27,7 +27,11 @@
 
 // seg002
 #include "i_sdlinc.h"
+
+#ifdef WIN32
+#include <windows.h>
 #include "system/win32/w32_sysinc.h"
+#endif
 
 #include "fitd.h"
 #include "gfx.h"
@@ -37,7 +41,7 @@
 #include "version.h"
 #include "main_loop.h"
 #include "textes.h"
-#include "common/forbidden.h"
+//#include "common/forbidden.h"
 
 
 namespace Fitd 
@@ -97,61 +101,6 @@ struct regularTextEntryStruct {
 
 regularTextEntryStruct textTable[40];
 messageStruct messageTable[NUM_MAX_MESSAGE];
-
-
-static void SetupLogAndDebugFiles(void)
-{
-	
-	// -AJA- 2003/11/08 The log file gets all CON_Printfs, I_Printfs,
-	//                  I_Warnings and I_Errors.
-
-	std::string log_fn;
-	std::string debug_fn;
-	//std::string gl_fn(epi::PATH_Join(home_dir.c_str(), "glext.log"));
-	//std::string glsl_fn(epi::PATH_Join(home_dir.c_str(), "glsl.log"));
-
-	logfile = NULL;
-	debugfile = NULL;
-	openglfile = NULL;
-	shadercompilefile = NULL;
-
-	if (!M_CheckParm("-nolog"))
-	{
-
-		logfile = fopen(log_fn.c_str(), "w");
-
-		if (!logfile)
-			I_Error("[E_Startup] Unable to create log file\n");
-	}
-
-	//
-	// -ACB- 1998/09/06 Only used for debugging.
-	//                  Moved here to setup debug file for DDF Parsing...
-	//
-	// -ES- 1999/08/01 Debugfiles can now be used without -DDEVELOPERS, and
-	//                 then logs all the CON_Printfs, I_Printfs and I_Errors.
-	//
-	// -ACB- 1999/10/02 Don't print to console, since we don't have a console yet.
-
-	int p = M_CheckParm("-gldebug");
-	if (true)
-	{
-		debugfile = fopen(debug_fn.c_str(), "w");
-
-		//openglfile = fopen(gl_fn.c_str(), "w");
-
-		//shadercompilefile = fopen(glsl_fn.c_str(), "w");
-
-		if (!debugfile)
-			I_Error("[E_Startup] Unable to create debugfile");
-
-		if (!openglfile)
-			I_Warning("[E_Startup] Unable to create openglfile");
-
-		if (!shadercompilefile)
-			I_Warning("[E_Startup] Unable to create shadercompilefile");
-	}
-}
 
 // TODO: optimize by reversing the table....
 int getCVarsIdx(enumCVars searchedType) 
@@ -1937,7 +1886,7 @@ int checkForHardCol(ZVStruct *zvPtr, roomDataStruct *pRoomData) {
 		if(((pCurrentEntry->zv.ZVX1) < (zvPtr->ZVX2)) && ((zvPtr->ZVX1) < (pCurrentEntry->zv.ZVX2))) {
 			if(((pCurrentEntry->zv.ZVY1) < (zvPtr->ZVY2)) && ((zvPtr->ZVY1) < (pCurrentEntry->zv.ZVY2))) {
 				if(((pCurrentEntry->zv.ZVZ1) < (zvPtr->ZVZ2)) && ((zvPtr->ZVZ1) < (pCurrentEntry->zv.ZVZ2))) {
-					ASSERT(hardColVar < 10);
+					SYS_ASSERT(hardColVar < 10);
 					hardColTable[hardColVar++] = pCurrentEntry;
 				}
 			}
@@ -2040,7 +1989,7 @@ int changeCameraSub2(void) {
 	int z2 = actorPtr->zv.ZVZ2 / 10;
 
 	for(int i = 0; i < numCameraInRoom; i++) {
-		ASSERT(i < NUM_MAX_CAMERA_IN_ROOM);
+		SYS_ASSERT(i < NUM_MAX_CAMERA_IN_ROOM);
 		if(changeCameraSub1(x1, x2, z1, z2, currentCameraZoneList[i])) { // if in camera zone ?
 			int newAngle = actorPtr->beta + (((cameraDataTable[i]->_beta) + 0x200) & 0x3FF);
 
@@ -2420,15 +2369,15 @@ void cleanupAndExit(void)
 	 free(screen); */
 
 	destroyMusicDriver();
-	I_SystemSHutdown();
-	error("Exiting");
+	I_SystemShutdown();
+	//I_Error("Exiting");
 }
 
 } // end of namespace Fitd
 
 using namespace Fitd;
 
-int main(int argc, char **argv) 
+int main() //int argc, char **argv
 {
 	//  int protectionToBeDone = 1;
 	char version[256];

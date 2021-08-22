@@ -25,13 +25,13 @@
 //
 //----------------------------------------------------------------------------
 
-#define FORBIDDEN_SYMBOL_EXCEPTION_srand
-#define FORBIDDEN_SYMBOL_EXCEPTION_rand
-#define FORBIDDEN_SYMBOL_ALLOW_ALL
+//#define FORBIDDEN_SYMBOL_EXCEPTION_srand
+//#define FORBIDDEN_SYMBOL_EXCEPTION_rand
+//#define FORBIDDEN_SYMBOL_ALLOW_ALL
 
 #include <ctime>
-#include "SDL.h"
-#include "common/textconsole.h"
+#include "i_sdlinc.h"
+//#include "common/textconsole.h" w32_system
 #include "fitd.h"
 #include "resource.h"
 #include "osystem.h"
@@ -106,50 +106,60 @@ void FitdEngine::run() {
 	startup();
 }
 
-void FitdEngine::detectGame(void) {
-	if(g_resourceLoader->getFileExists("LISTBOD2.PAK")) {
+void FitdEngine::detectGame(void) 
+{
+	if(g_resourceLoader->getFileExists("LISTBOD2.PAK")) 
+	{
 		_gameType = GType_AITD1;
 		_numCVars = 45;
 		_currentCVarTable = AITD1KnownCVars;
 
-		warning("Detected Alone in the Dark 1\n");
+		I_Error("Detected Alone in the Dark 1\n");
 		return;
-	} else {
+	} else 
+	{
 		_numCVars = 70;
 		_currentCVarTable = AITD2KnownCVars;
 		
-		if(g_resourceLoader->getFileExists("PERE.PAK")) {
+		if(g_resourceLoader->getFileExists("PERE.PAK")) 
+		{
 			_gameType = GType_JACK;
-			warning("Detected Jack in the Dark\n");
+			I_Warning("Detected Jack in the Dark\n");
 			return;
 		}
-		if(g_resourceLoader->getFileExists("MER.PAK")) {
+		if(g_resourceLoader->getFileExists("MER.PAK")) 
+		{
 			_gameType = GType_AITD2;
-			warning("Detected Alone in the Dark 2\n");
+			I_Warning("Detected Alone in the Dark 2\n");
 			return;
 		}
-		if(g_resourceLoader->getFileExists("AN1.PAK")) {
+		if(g_resourceLoader->getFileExists("AN1.PAK")) 
+		{
 			_gameType = GType_AITD3;
-			warning("Detected Alone in the Dark 3\n");
+			I_Warning("Detected Alone in the Dark 3\n");
 			return;
 		}
-		if(g_resourceLoader->getFileExists("PURSUIT.PAK")) {
+		if(g_resourceLoader->getFileExists("PURSUIT.PAK")) 
+		{
 			_gameType = GType_TIMEGATE;
 			_numCVars = 70; // TODO: figure this
 			_currentCVarTable = AITD2KnownCVars; // TODO: figure this
 			
-			warning("Detected Time Gate\n");
+			I_Warning("Detected Time Gate\n");
 			return;
 		}
 		
-		error("FATAL: Game detection failed...\n");
+		I_Error("FATAL: Game detection failed...\n");
 	}
 }
 
-int FitdEngine::getCVarsIdx(enumCVars searchedType) { // TODO: optimize by reversing the table....
-	for(int i = 0; i < g_fitd->getNumCVars(); i++) {
-		if(_currentCVarTable[i] == -1) {
-			ASSERT(0);
+int FitdEngine::getCVarsIdx(enumCVars searchedType) 
+{ // TODO: optimize by reversing the table....
+	for(int i = 0; i < g_fitd->getNumCVars(); i++) 
+	{
+		if(_currentCVarTable[i] == -1) 
+		{
+			SYS_ASSERT(0);
 		}
 		
 		if(_currentCVarTable[i] == searchedType)
@@ -157,13 +167,15 @@ int FitdEngine::getCVarsIdx(enumCVars searchedType) { // TODO: optimize by rever
 	}
 }
 
-void FitdEngine::startup() {
+void FitdEngine::startup() 
+{
 	int startupMenuResult;
 	g_driver->_paletteObj->fill(0, 0, 0);
 	
 	preloadResource();
 	
-	switch(g_fitd->getGameType()) {
+	switch(g_fitd->getGameType()) 
+	{
 		case GType_AITD1: {
 			fadeIn(g_driver->_palette);
 			
@@ -303,7 +315,7 @@ void FitdEngine::startup() {
 			}
 			case 2: { // exit
 				freeAll();
-				error("Exiting");
+				I_Error("Exiting");
 				//exit(-1);
 				
 				break;

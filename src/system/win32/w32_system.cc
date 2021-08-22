@@ -17,9 +17,10 @@
 //----------------------------------------------------------------------------
 
 
+#include "common.h"
 #include "i_sdlinc.h"
-#include "../i_system.h"
-
+//#include "../i_system.h"
+//#include "common.h"
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -34,9 +35,9 @@ extern int __cdecl I_W32ExceptionHandler(PEXCEPTION_POINTERS ep);
 
 #include <InitGuid.h>
 
-extern FILE* debugfile;
-extern FILE* logfile;
-extern FILE* openglfile;
+//extern FILE* debugfile;
+//extern FILE* logfile;
+//extern FILE* openglfile;
 
 // output string buffer
 #define MSGBUFSIZE 4096
@@ -185,22 +186,22 @@ void I_Error(const char *error,...)
 	vsprintf(msgbuf, error, argptr);
 	va_end(argptr);
 
-	if (logfile)
-	{
-		fprintf(logfile, "ERROR: %s\n", msgbuf);
-		fflush(logfile);
-	}
+	//if (logfile)
+	//{
+	//	fprintf(logfile, "ERROR: %s\n", msgbuf);
+	//	fflush(logfile);
+	//}
 
-	if (debugfile)
-	{
-		fprintf(debugfile, "ERROR: %s\n", msgbuf);
-		fflush(debugfile);
-	}
-	if (openglfile)
-	{
-		fprintf(openglfile, "ERROR: %s\n", glbuf);
-		fflush(openglfile);
-	}
+	//if (debugfile)
+	//{
+	//	fprintf(debugfile, "ERROR: %s\n", msgbuf);
+	//	fflush(debugfile);
+	//}
+	//if (openglfile)
+	//{
+	//	fprintf(openglfile, "ERROR: %s\n", glbuf);
+	//	fflush(openglfile);
+	//}
 
 	I_SystemShutdown();
 
@@ -228,10 +229,11 @@ void I_Printf(const char *message,...)
 	// Print the message into a text string
 	vsprintf(printbuf, message, argptr);
 
-	L_WriteLog("%s", printbuf);
+	// ENABLE WRITING TO THE FILE (SET THIS UP AND UNCOMMENT IN MAIN.CC)
+	//L_WriteLog("%s", printbuf);
 
 	// If debuging enabled, print to the debugfile
-	L_WriteDebug("%s", printbuf);
+	//L_WriteDebug("%s", printbuf);
 
 	// Clean up \n\r combinations
 	while (*string)
@@ -243,85 +245,6 @@ void I_Printf(const char *message,...)
 			string++;
 		}
 		string++;
-	}
-
-	// Send the message to the console.
-	//CON_Printf("%s", printbuf);
-
-	va_end(argptr);
-}
-
-//
-// I_Printf
-//
-void I_PrintGL(const char *message, ...)
-{
-	va_list argptr;
-	char *glstring;
-	//char printbuf[MSGBUFSIZE];
-	char printglbuf[GLMSGBUFSIZE];
-
-	// clear the buffer
-	memset(printglbuf, 0, GLMSGBUFSIZE);
-	//memset(printbuf, 0, MSGBUFSIZE);
-
-	glstring = printglbuf;
-
-	va_start(argptr, message);
-
-	// Print the message into a text string
-	vsnprintf(printglbuf, 8096, message, argptr);
-
-	L_WriteOpenGL("%s", printglbuf);
-
-	// Clean up \n\r combinations
-	while (*glstring)
-	{
-		if (*glstring == '\n')
-		{
-			memmove(glstring + 2, glstring + 1, strlen(glstring));
-			glstring[1] = '\r';
-			glstring++;
-		}
-		glstring++;
-	}
-
-	// Send the message to the console.
-	//CON_Printf("%s", printbuf);
-
-	va_end(argptr);
-}
-
-void I_GLSL(const char *message, ...)
-{
-	va_list argptr;
-	char *glslstring;
-	//char printbuf[MSGBUFSIZE];
-	char printglbuf[GLMSGBUFSIZE];
-
-	// clear the buffer
-	memset(printglbuf, 0, GLMSGBUFSIZE);
-	//memset(printbuf, 0, MSGBUFSIZE);
-
-	glslstring = printglbuf;
-
-	va_start(argptr, message);
-
-	// Print the message into a text string
-	vsnprintf(printglbuf, 8096, message, argptr);
-
-	L_WriteOpenGL("%s", printglbuf);
-
-	// Clean up \n\r combinations
-	while (*glslstring)
-	{
-		if (*glslstring == '\n')
-		{
-			memmove(glslstring + 2, glslstring + 1, strlen(glslstring));
-			glslstring[1] = '\r';
-			glslstring++;
-		}
-		glslstring++;
 	}
 
 	// Send the message to the console.
@@ -342,10 +265,10 @@ void I_MessageBox(const char *message, const char *title)
 //
 // I_PureRandom
 //
-int I_PureRandom(void)
-{
-	return ((int)time(NULL) ^ (int)I_ReadMicroSeconds()) & 0x7FFFFFFF;
-}
+//int I_PureRandom(void)
+//{
+//	return ((int)time(NULL) ^ (int)I_ReadMicroSeconds()) & 0x7FFFFFFF;
+//}
 
 //
 // I_ReadMicroSeconds
@@ -379,26 +302,26 @@ void I_Tactile(int frequency, int intensity, int select)
 void I_SystemShutdown(void)
 {
 	// make sure audio is unlocked (e.g. I_Error occurred)
-	I_UnlockAudio();
+	//I_UnlockAudio();
 
 	//I_ShutdownNetwork();
-	I_ShutdownMusic();
-	I_ShutdownSound();
-	I_ShutdownControl();
-	I_ShutdownGraphics();
+	//I_ShutdownMusic();
+	//I_ShutdownSound();
+	//I_ShutdownControl();
+	//I_ShutdownGraphics();
 
-	if (logfile)
-	{
-		fclose(logfile);
-		logfile = NULL;
-	}
+	//if (logfile)
+	//{
+	//	fclose(logfile);
+	//	logfile = NULL;
+	//}
 
 	// -KM- 1999/01/31 Close the debugfile
-	if (debugfile != NULL)
-	{
-		fclose(debugfile);
-		debugfile = NULL;
-	}
+	//if (debugfile != NULL)
+	//{
+	//	fclose(debugfile);
+	//	debugfile = NULL;
+	//}
 
 	//ShowCursor(TRUE);
 	FlushMessageQueue();

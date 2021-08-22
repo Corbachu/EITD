@@ -34,18 +34,23 @@
 #include "common/endian.h"
 #define HAVE_CONFIG_H
 #else
-#include "common/endian.h"
+#include "epi/types.h"
+#include "epi/endianess.h"
 #endif
+
+#include <stdio.h>
+#include <cstdio>
 
 namespace Common {
 
-class SeekableReadStream {
+class SeekableReadStream 
+{
 public:
 	virtual ~SeekableReadStream() {}
 	virtual bool open(const char *filename) = 0;
 	virtual bool isOpen() = 0;
-	virtual uint32 read(byte *target, uint32 size) = 0;
-	virtual uint32 readUint32LE() = 0;
+	virtual u32_t read(byte *target, u32_t size) = 0;
+	virtual u32_t readUint32LE() = 0;
 	virtual uint16 readUint16LE() = 0;
 	virtual byte readByte() = 0;
 	virtual int32 size() = 0;
