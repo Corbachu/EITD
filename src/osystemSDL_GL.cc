@@ -1,4 +1,29 @@
 //----------------------------------------------------------------------------
+//  EDGE IN THE DARK
+//----------------------------------------------------------------------------
+// 
+//  Copyright (c) 1999-2021  The EDGE Team.
+// 
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//----------------------------------------------------------------------------
+//
+//  Based on the DOOM source code, released by Id Software under the
+//  following copyright:
+//
+//    Copyright (C) 1993-1996 by id Software, Inc.
+//
+//  Based on the FITD source code, under the GPLv2, (C) FITD AUTHORS
+//
+//----------------------------------------------------------------------------
 
 #define USE_GL
 #ifdef USE_GL
@@ -21,21 +46,21 @@
  ***************************************************************************/
 
 #include "i_sdlinc.h"
-#include <SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 #include "osystem.h"
 
-#include "system/i_system.h"
 #include "fitd.h"
 #include "common.h"
 
-namespace Fitd {
-
+namespace Fitd 
+{
 unsigned int ditherTexture;
 unsigned int gouraudTexture = 0;
 
 GFXSystem *g_driver;
 
-struct quadStruct {
+struct quadStruct 
+{
 	float x1;
 	float y1;
 	float z1;
@@ -64,16 +89,17 @@ struct quadStruct {
 quadStruct quadTable[5000];
 int positionInQuadTable = 0;
 
-char *tempBuffer;
-SDL_Surface *sdl_buffer;
-SDL_Surface *sdl_buffer320x200;
-SDL_Surface *sdl_buffer640x400;
-SDL_Surface *sdl_bufferStretch;
-SDL_Surface *sdl_bufferRGBA;
-SDL_Surface *sdl_screen;  // that's the SDL global object for the screen
+char* tempBuffer;
+SDL_Surface* sdl_buffer;
+SDL_Surface* sdl_buffer320x200;
+SDL_Surface* sdl_buffer640x400;
+SDL_Surface* sdl_bufferStretch;
+SDL_Surface* sdl_bufferRGBA;
+static SDL_Window* sdl_screen;// that's the SDL global object for the screen
+static SDL_GLContext sdlGlContext;
 SDL_Color sdl_colors[256];
-SDL_Surface *surfaceTable[16];
-char RGBA_Pal[256*4];
+SDL_Surface* surfaceTable[16];
+char RGBA_Pal[256 * 4];
 //TTF_Font *font;
 
 GLuint    backTexture;
@@ -114,11 +140,12 @@ void GFXSystem::updateImage() {
 #define CALLBACK
 #endif
 
-void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4], GLfloat weight[4], GLdouble **dataOut) {
+void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4], GLfloat weight[4], GLdouble **dataOut) 
+{
 	int i;
 	GLdouble *vertex;
 
-	ASSERT(true);
+	SYS_ASSERT(true);
 
 	vertex = (GLdouble *) malloc(6 * sizeof(GLdouble));
 	vertex[0] = coords[0];
@@ -135,11 +162,13 @@ void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4], GLfl
 	*dataOut = vertex;
 }
 
-void OPL_musicPlayer(void *udata, Uint8 *stream, int len) {
+void OPL_musicPlayer(void *udata, Uint8 *stream, int len)
+{
 	musicUpdate(udata, stream, len);
 }
 
-void CALLBACK vertexCallback(void *vertex) {
+void CALLBACK vertexCallback(void *vertex) 
+{
 	GLdouble *ptr;
 	GLdouble x;
 	GLdouble y;
@@ -162,7 +191,8 @@ void Sound_Quit(void)
 	Mix_CloseAudio();
 }
 
-GFXSystem::GFXSystem() {
+GFXSystem::GFXSystem() 
+{
 	_palette = new char[0x300];
 	_paletteObj = new Palette(_palette);
 }
@@ -192,50 +222,26 @@ void GFXSystem::init()  // that's the constructor of the system dependent
 		I_Error("Couldn't initialize SDL: %s\n", SDL_GetError());
 	}
 
-	//atexit(Sound_Quit);
-	//  atexit(SDL_Quit);
-
-	/*    if (TTF_Init() < 0)
-	 {
-	 fprintf(stderr, "Couldn't initialize TTF: %s\n", SDL_GetError());
-	 exit(1);
-	 }
-	 atexit(TTF_Quit);
-
-	 int rendersolid = 0;
-	 int renderstyle = 0;
-	 int rendertype = 0;
-
-	 int ptsize = 11;
-
-	 font = TTF_OpenFont("verdana.ttf", ptsize);
-
-	 if (font == NULL)
-	 {
-	 fprintf(stderr, "Couldn't load %d pt font from %s: %s\n", ptsize, "verdana.ttf",
-	 SDL_GetError());
-	 exit(2);
-	 }
-
-	 TTF_SetFontStyle(font, renderstyle);*/
-
-	SDL_WM_SetCaption("Alone in the Dark \"GL\"", "EITD");
-
-	// SDL_ShowCursor (SDL_DISABLE);
-
-	// SDL_EnableUNICODE (SDL_ENABLE); // not much used in fact
-
 	SDL_PumpEvents();
 
-	keyboard = SDL_GetKeyState(&size);
+	sdl_screen = SDL_CreateWindow(
+		"EDGE In The Dark \"GL\"",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		800, 600,
+		SDL_WINDOW_OPENGL /*|SDL_FULLSCREEN*/);
 
-	keyboard[SDLK_RETURN] = 0;
-
-	sdl_screen = SDL_SetVideoMode(640, 400, 32, SDL_OPENGL/*|SDL_FULLSCREEN*/);
-
-	if(sdl_screen == NULL) 
+	if (sdl_screen == NULL) 
 	{
-		I_Error("Couldn't set 640x400x32 video mode: %s\n", SDL_GetError());
+		I_Error("Couldn't set 640x480x32 video mode: %s\n", SDL_GetError());
+	}
+
+	/* now create the GL context */
+	sdlGlContext = SDL_GL_CreateContext(sdl_screen);
+
+	if (sdlGlContext == NULL) 
+	{
+		I_Error("Failed to create GL context : % s\n", SDL_GetError());
 	}
 
 	_mouseLeft = 0;
@@ -250,7 +256,7 @@ void GFXSystem::init()  // that's the constructor of the system dependent
 	// glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 
-	glViewport(0, 0, 640, 400);
+	glViewport(0, 0, 640, 400); //0,0,640,400... up to 800x600 after compile 
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);       // Black Background
 	glMatrixMode(GL_PROJECTION);            // Select The Projection Matrix
@@ -287,7 +293,7 @@ void GFXSystem::init()  // that's the constructor of the system dependent
 #endif
 
 	// SDL_mixer init
-
+	// note, freq 44100, chunksize 2048
 	if(Mix_OpenAudio(8000, MIX_DEFAULT_FORMAT, 1, 512) == -1) 
 	{
 		I_Error("Mix_OpenAudio: %s\n", Mix_GetError());
@@ -307,8 +313,10 @@ void GFXSystem::init()  // that's the constructor of the system dependent
 
 		unsigned char *tempPtr = ditherMap;
 
-		for(i = 0; i < 256; i++) {
-			for(j = 0; j < 256; j++) {
+		for(i = 0; i < 256; i++) 
+		{
+			for(j = 0; j < 256; j++) 
+			{
 				unsigned char ditherValue = g_fitd->randRange(0, 0x50);
 
 				*(tempPtr++) = ditherValue;
@@ -338,7 +346,8 @@ void GFXSystem::init()  // that's the constructor of the system dependent
 	sphere = gluNewQuadric();
 }
 
-void GFXSystem::setPalette(byte *palette) {
+void GFXSystem::setPalette(byte *palette) 
+{
 
 	int i;
 	unsigned char localPalette[256*256*4];
@@ -346,13 +355,15 @@ void GFXSystem::setPalette(byte *palette) {
 
 	memcpy(RGBA_Pal, palette, 256 * 4);
 
-	for(i = 0; i < 256; i++) {
+	for(i = 0; i < 256; i++) 
+	{
 		memcpy(ptr, palette, 256 * 4);
 
 		ptr += 256 * 4;
 	}
 
-	if(gouraudTexture) {
+	if(gouraudTexture) 
+	{
 		glDeleteTextures(1, &gouraudTexture);
 	}
 	glGenTextures(1, &gouraudTexture);
@@ -364,7 +375,8 @@ void GFXSystem::setPalette(byte *palette) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GFXSystem::getPalette(char *palette) {
+void GFXSystem::getPalette(char *palette) 
+{
 	memcpy(palette, RGBA_Pal, 256 * 4);
 }
 
@@ -380,114 +392,24 @@ float fov = 0;
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-void GFXSystem::flip(unsigned char *videoBuffer) {
+void GFXSystem::flip(unsigned char *videoBuffer) 
+{
 	int i;
 	int j;
 	int bestIdx;
-	//  double matProj[16];
 
-	/*  glMatrixMode(GL_MODELVIEW);
-	 glLoadIdentity();
-	 //  gluLookAt(0,0,cameraX,cameraCenterX,cameraCenterY,0,0,1,0);
-
-	 glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-
-	 if(cameraX)
-	 fov = (atan(160.f / (float)(cameraX*4))) * 160 / M_PI;
-
-	 glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-	 gluPerspective((((float)cameraY)/((float)cameraZ))*60,1.6f,nearVal,farVal);
-	 glTranslatef(0,0,cameraZoom);
-
-	 /* glFrustum(-160, 159, -99, 100, nearVal, farVal);
-
-	 glGetDoublev(GL_PROJECTION_MATRIX,matProj);
-
-	 matProj[0] = cameraY/320.f;
-	 matProj[1] = 0;
-	 matProj[2] = cameraCenterX;
-	 matProj[3] = cameraCenterX*cameraX;
-
-	 matProj[4] = 0;
-	 matProj[5] = cameraZ/200.f;
-	 matProj[6] = cameraCenterY;
-	 matProj[7] = cameraCenterY*cameraX;
-
-	 matProj[8] = 0;
-	 matProj[9] = 0;
-	 matProj[10] = 1;
-	 matProj[11] = cameraX;
-
-	 matProj[12] = 0;
-	 matProj[13] = 0;
-	 matProj[14] = 1;
-	 matProj[15] = cameraX;*/
-	//---------------------------
-	/* matProj[0] = 0.68338555097579956f;
-	 matProj[1] = 0;
-	 matProj[2] = 0;
-	 matProj[3] = 0;
-
-	 matProj[4] = 0;
-	 matProj[5] = 1.0954773426055908;
-	 matProj[6] = 0;
-	 matProj[7] = 0;
-
-	 matProj[8] = -0.00313479616306772216;
-	 matProj[9] = 0.0050251;
-	 matProj[10] = -1;
-	 matProj[11] = -1;
-
-	 matProj[12] = 0;
-	 matProj[13] = 0;
-	 matProj[14] = -218.023;
-	 matProj[15] = 0; */
-
-	// glLoadIdentity();
-
-	// glLoadMatrixd(matProj);
-
-	// gl
-	//glFrustum(-cameraCenterX, 320 - cameraCenterX-1, 200-cameraCenterY, - cameraCenterY-1, nearVal, farVal);
-	// glFrustum(-160, 159, -99, 100, nearVal, farVal);
-
-	// glGetDoublev(GL_PROJECTION_MATRIX,matProj);
-
-	//glFrustum(-160, 159, 99, -100, nearVal, farVal);
-	//glTranslatef(0,0,cameraZoom);
-	//gluLookAt(0,0,cameraX,cameraCenterX,cameraCenterY,0,0,1,0);
-
-	/* glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-
-	 if(cameraX)
-	 fov = (atan(160 / (cameraX*4))) * 160 / M_PI;
-
-	 gluPerspective(fov, 1.6f, nearVal, farVal);
-	 glTranslatef(0,0,cameraZoom); */
-
-
-	/* glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-	 gluPerspective(fov,320.f/200.f,nearVal,farVal);*/
-
-	/* glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-	 glOrtho(0,320,200,0,0,100);
-
-	 glMatrixMode(GL_MODELVIEW);
-	 glLoadIdentity(); */
-
-	for(j = 0; j < positionInQuadTable; j++) {
+	for(j = 0; j < positionInQuadTable; j++) 
+	{
 		float bestDepth = -10000;
 		//    int color;
 		bestIdx = 0;
 
-		for(i = 0; i < positionInQuadTable; i++) {
+		for(i = 0; i < positionInQuadTable; i++) 
+		{
 			if(!quadTable[i].sorted) {
-				if(bestDepth < quadTable[i].depth) {
+
+				if(bestDepth < quadTable[i].depth) 
+				{
 					bestDepth = quadTable[i].depth;
 					bestIdx = i;
 				}
@@ -504,46 +426,25 @@ void GFXSystem::flip(unsigned char *videoBuffer) {
 		glVertex3f(quadTable[bestIdx].x1, quadTable[bestIdx].y1, quadTable[bestIdx].z1);
 		glVertex3f(quadTable[bestIdx].x2, quadTable[bestIdx].y2, quadTable[bestIdx].z2);
 		glVertex3f(quadTable[bestIdx].x3, quadTable[bestIdx].y3, quadTable[bestIdx].z3);
+
 		if(quadTable[bestIdx].numPoint == 4)
 			glVertex3f(quadTable[bestIdx].x4, quadTable[bestIdx].y4, quadTable[bestIdx].z4);
 		glEnd();
 		glDisable(GL_POLYGON_OFFSET_FILL);
 
-		//  glDisable(GL_DEPTH_TEST);
-		/*   color = quadTable[bestIdx].color+3;
-		 glColor3ub(palette[color*3],palette[color*3+1],palette[color*3+2]);
-		 glBegin(GL_LINE_LOOP);
-		 glVertex3f(quadTable[bestIdx].x1,quadTable[bestIdx].y1,-quadTable[bestIdx].z1);
-		 glVertex3f(quadTable[bestIdx].x2,quadTable[bestIdx].y2,-quadTable[bestIdx].z2);
-		 glVertex3f(quadTable[bestIdx].x3,quadTable[bestIdx].y3,-quadTable[bestIdx].z3);
-		 glVertex3f(quadTable[bestIdx].x4,quadTable[bestIdx].y4,-quadTable[bestIdx].z4);
-		 glEnd(); */
-		//  glEnable(GL_DEPTH_TEST);
+
 
 		quadTable[bestIdx].sorted = true;
 	}
 
 	positionInQuadTable = 0;
 
-	SDL_GL_SwapBuffers();
+	SDL_GL_SwapWindow(sdl_screen);
 
-	/*  glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-	 glOrtho(0,320,200,0,0,100);
-
-	 glMatrixMode(GL_MODELVIEW);
-	 glLoadIdentity(); */
-
-	//glTranslated(-cameraX,-cameraY,-cameraZ);
-
-	/* glMatrixMode(GL_PROJECTION);
-	 glLoadIdentity();
-	 gluPerspective(180,320/200,0.1,50000);*/
-	//glFrustum(-cameraCenterX, 320 - cameraCenterX, -cameraCenterY, 200 - cameraCenterY, -0.1, -50000);
-	//glTranslated(-cameraX,-cameraY,-cameraZ);
 }
 
-void GFXSystem::startFrame() {
+void GFXSystem::startFrame() 
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #ifdef INTERNAL_DEBUGGER
@@ -578,24 +479,29 @@ void GFXSystem::startFrame() {
 
 char tempBuffer3[320*200*3];
 
-void GFXSystem::CopyBlockPhys(unsigned char *videoBuffer, int left, int top, int right, int bottom) {
+void GFXSystem::CopyBlockPhys(unsigned char *videoBuffer, int left, int top, int right, int bottom) 
+{
 	char *out = tempBuffer3;
 	char *in = (char *)videoBuffer + left + top * 320;
 
 	int i;
 	int j;
 
-	while((right - left) % 4) {
+	while((right - left) % 4) 
+	{
 		right++;
 	}
 
-	while((bottom - top) % 4) {
+	while((bottom - top) % 4) 
+	{
 		bottom++;
 	}
 
-	for(i = top; i < bottom; i++) {
+	for(i = top; i < bottom; i++) 
+	{
 		in = (char *)videoBuffer + left + i * 320;
-		for(j = left; j < right; j++) {
+		for(j = left; j < right; j++) 
+		{
 			unsigned char color = *(in++);
 
 			*(out++) = g_driver->_palette[color*3];
@@ -610,8 +516,10 @@ void GFXSystem::CopyBlockPhys(unsigned char *videoBuffer, int left, int top, int
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GFXSystem::initBuffer(char *buffer, int width, int height) {
+void GFXSystem::initBuffer(char *buffer, int width, int height) 
+{
 	memset(tempBuffer2, 0, 1024 * 512 * 3);
+
 	glGenTextures(1, &backTexture);
 	glBindTexture(GL_TEXTURE_2D, backTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, tempBuffer2);
@@ -619,13 +527,15 @@ void GFXSystem::initBuffer(char *buffer, int width, int height) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-void GFXSystem::crossFade(char *buffer, char *palette) {
+void GFXSystem::crossFade(char *buffer, char *palette) 
+{
 }
 
 int posInStream = 0;
 volatile bool deviceStatus = false;
 
-void my_audio_callback(void *userdata, Uint8 *stream, int len) {
+void my_audio_callback(void *userdata, Uint8 *stream, int len) 
+{
 	/*  Sound_Sample *sample = (Sound_Sample *)userdata;
 	 Uint8* input = (Uint8*)sample->buffer;
 
@@ -658,7 +568,8 @@ void GFXSystem::playSampleFromName(char *sampleName) {
 	}
 }
 #else
-void GFXSystem::playSample(char *samplePtr, int size) {
+void GFXSystem::playSample(char *samplePtr, int size) 
+{
 
 	Mix_Chunk *sample;
 
@@ -669,7 +580,9 @@ void GFXSystem::playSample(char *samplePtr, int size) {
 #ifdef INTERNAL_DEBUGGER
 		I_Warning("Mix_LoadWAV_RW: %s\n", Mix_GetError());
 #endif
-	} else {
+	} 
+	else 
+	{
 		Mix_PlayChannel(-1, sample, 0);
 	}
 }
@@ -677,7 +590,8 @@ void GFXSystem::playSample(char *samplePtr, int size) {
 
 int tesselatePosition = 0;
 
-void GFXSystem::startBgPoly() {
+void GFXSystem::startBgPoly() 
+{
 	// glDisable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
 	glBindTexture(GL_TEXTURE_2D, backTexture);
@@ -689,7 +603,8 @@ void GFXSystem::startBgPoly() {
 	tesselatePosition = 0;
 }
 
-void GFXSystem::endBgPoly() {
+void GFXSystem::endBgPoly() 
+{
 	gluTessEndContour(tobj);
 	gluTessEndPolygon(tobj);
 
@@ -699,7 +614,8 @@ void GFXSystem::endBgPoly() {
 
 }
 
-void GFXSystem::addBgPolyPoint(int x, int y) {
+void GFXSystem::addBgPolyPoint(int x, int y) 
+{
 	tesselateList[tesselatePosition][0] = x;
 	tesselateList[tesselatePosition][1] = y;
 	tesselateList[tesselatePosition][2] = 0;
@@ -713,21 +629,26 @@ void GFXSystem::addBgPolyPoint(int x, int y) {
 }
 
 
-void GFXSystem::stopFrame() {
+void GFXSystem::stopFrame() 
+{
 }
 
-void GFXSystem::startModelRender() {
+void GFXSystem::startModelRender() 
+{
 	//glNewList(modelsDisplayList, GL_COMPILE);
 }
 
-void GFXSystem::stopModelRender() {
+void GFXSystem::stopModelRender() 
+{
 	//glEndList();
 }
 
-void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8 polyType) {
+void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8 polyType) 
+{
 	int i;
 
-	switch(polyType) {
+	switch(polyType) 
+	{
 	case 0: { // flat:
 		glColor4ub(g_driver->_palette[color*3],
 				   g_driver->_palette[color*3+1],
@@ -735,7 +656,8 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 				   255);
 		glBegin(GL_POLYGON);
 
-		for(i = 0; i < numPoint; i++) {
+		for(i = 0; i < numPoint; i++) 
+		{
 			glVertex3f(buffer[0], buffer[1], buffer[2]);
 			buffer += 3;
 		}
@@ -743,7 +665,8 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 		glEnd();
 		break;
 	}
-	case 1: { // dither (pierre)
+	case 1: 
+	{ // dither (pierre)
 		float *readList;
 		GLdouble textureX = 0;
 		GLdouble textureY = 0;
@@ -767,7 +690,8 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 
 		glBegin(GL_POLYGON);
 
-		for(i = 0; i < numPoint; i++) {
+		for(i = 0; i < numPoint; i++) 
+		{
 			float X = *(readList++);
 			float Y = *(readList++);
 			float Z = *(readList++);
@@ -784,14 +708,16 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 		glBindTexture(GL_TEXTURE_2D, 0);
 		break;
 	}
-	case 2: { // trans
+	case 2: 
+	{ // trans
 		glColor4ub(g_driver->_palette[color*3],
 				   g_driver->_palette[color*3+1],
 				   g_driver->_palette[color*3+2],
 				   128);
 		glBegin(GL_POLYGON);
 
-		for(i = 0; i < numPoint; i++) {
+		for(i = 0; i < numPoint; i++) 
+		{
 			glVertex3f(buffer[0], buffer[1], buffer[2]);
 			buffer += 3;
 		}
@@ -815,7 +741,7 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 		 glGetDoublev(GL_PROJECTION_MATRIX, projMatrix);
 		 glGetIntegerv(GL_VIEWPORT, viewMatrix);
 
-		 ASSERT(numPoint == 3 || numPoint == 4);
+		 SYS_ASSERT(numPoint == 3 || numPoint == 4);
 
 		 quadTable[positionInQuadTable].x1 = buffer[0];
 		 quadTable[positionInQuadTable].y1 = buffer[1];
@@ -872,7 +798,8 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 		break;
 	}
 	default:
-	case 4: { // marbre
+	case 4: 
+	{ // marbre
 		int numColorToGo;
 		float *readList = (float *)buffer;
 
@@ -896,7 +823,8 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 		glGetDoublev(GL_PROJECTION_MATRIX, projMatrix);
 		glGetIntegerv(GL_VIEWPORT, viewMatrix);
 
-		for(i = 0; i < numPoint; i++) {
+		for(i = 0; i < numPoint; i++) 
+		{
 			float X = *(readList++);
 			float Y = *(readList++);
 			float Z = *(readList++);
@@ -924,6 +852,7 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 		glColor4ub(255, 255, 255, 255);
 
 		glBindTexture(GL_TEXTURE_2D, gouraudTexture);
+
 		glBegin(GL_POLYGON);
 
 		for(i = 0; i < numPoint; i++) {
@@ -951,12 +880,14 @@ void GFXSystem::fillPoly(float *buffer, int numPoint, unsigned char color, uint8
 		glEnd();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
+
 		break;
 	}
 	}
 }
 
-void GFXSystem::draw3dLine(float x1, float y1, float z1, float x2, float y2, float z2, unsigned char color) {
+void GFXSystem::draw3dLine(float x1, float y1, float z1, float x2, float y2, float z2, unsigned char color) 
+{
 	glColor4ub(g_driver->_palette[color*3],
 			   g_driver->_palette[color*3+1],
 			   g_driver->_palette[color*3+2], 255);
@@ -969,7 +900,8 @@ void GFXSystem::draw3dLine(float x1, float y1, float z1, float x2, float y2, flo
 	glEnd();
 }
 
-void GFXSystem::cleanScreenKeepZBuffer() {
+void GFXSystem::cleanScreenKeepZBuffer() 
+{
 	return;
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -997,10 +929,12 @@ void GFXSystem::cleanScreenKeepZBuffer() {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GFXSystem::draw3dQuad(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float x4, float y4, float z4, unsigned char color, int transparency) {
+void GFXSystem::draw3dQuad(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float x4, float y4, float z4, unsigned char color, int transparency) 
+{
 	glColor4ub(g_driver->_palette[(color+3)*3],
 			   g_driver->_palette[(color+3)*3+1],
 			   g_driver->_palette[(color+3)*3+2], 255);
+
 	glBegin(GL_LINE_LOOP);
 	glVertex3f(x1, y1, z1);
 	glVertex3f(x2, y2, z2);
@@ -1008,7 +942,8 @@ void GFXSystem::draw3dQuad(float x1, float y1, float z1, float x2, float y2, flo
 	glVertex3f(x4, y4, z4);
 	glEnd();
 
-	if(transparency != 255) {
+	if(transparency != 255) 
+	{
 		quadTable[positionInQuadTable].x1 = x1;
 		quadTable[positionInQuadTable].y1 = y1;
 		quadTable[positionInQuadTable].z1 = z1;
@@ -1044,7 +979,8 @@ void GFXSystem::draw3dQuad(float x1, float y1, float z1, float x2, float y2, flo
 			quadTable[positionInQuadTable].depth = z4;
 
 		positionInQuadTable++;
-	} else {
+	} else 
+	{
 		glColor4ub(g_driver->_palette[color*3],
 				   g_driver->_palette[color*3+1],
 				   g_driver->_palette[color*3+2],
@@ -1061,7 +997,8 @@ void GFXSystem::draw3dQuad(float x1, float y1, float z1, float x2, float y2, flo
 	}
 }
 
-void GFXSystem::drawSphere(float X, float Y, float Z, uint8 color, float size) {
+void GFXSystem::drawSphere(float X, float Y, float Z, uint8 color, float size) 
+{
 	glMatrixMode(GL_MODELVIEW);
 
 	glColor3ub(g_driver->_palette[color*3],
@@ -1077,7 +1014,8 @@ void GFXSystem::drawSphere(float X, float Y, float Z, uint8 color, float size) {
 }
 
 #ifdef INTERNAL_DEBUGGER
-void GFXSystem::drawDebugText(const uint32 X, const uint32 Y, const uint8 *string) {
+void GFXSystem::drawDebugText(const uint32 X, const uint32 Y, const uint8 *string)
+{
 #if 0
 	u32 currentX = X;
 	u32 i;
